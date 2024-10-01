@@ -8,7 +8,8 @@ class SignUpPage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          Image.asset('assets/janaban.png'), // Add your image asset here
+          Image.network(
+              'https://picsum.photos/id/237/200/300'), // Add your image asset here
           const SizedBox(height: 20),
           const Text(
             'Create an Account',
