@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 
 class SignUpPage extends StatelessWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          Image.asset('lib/features/images/janaban.jpg'), // Add your image asset here
+          Image.asset('assets/janaban.png'), // Add your image asset here
           const SizedBox(height: 20),
           const Text(
             'Create an Account',
