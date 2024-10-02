@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/signup.dart';
+import 'package:cc206_mealplanner/features/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,9 +14,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity, 
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const SignUpPage(), // Use SignUpPage here
+      home: const LoginPage(),
     );
   }
 }

@@ -1,31 +1,25 @@
-import 'package:cc206_mealplanner/features/login.dart';
 import 'package:flutter/material.dart';
+import 'package:cc206_mealplanner/features/signup.dart'; // Import the signup.dart file
 
-class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.cyan.shade100,
-              Colors.green.shade500,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Container(
+          margin: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _header(context),
+              _inputField(context),
+              _forgotPassword(context),
+              _signup(context),
             ],
           ),
-        ),
-        margin: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _header(context),
-            _inputField(context),
-            _login(context),
-          ],
         ),
       ),
     );
@@ -40,10 +34,10 @@ class SignupPage extends StatelessWidget {
           height: 100,
         ),
         const Text(
-          "Create Account",
+          "Welcome Back",
           style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
         ),
-        const Text("Enter your credential to signup"),
+        const Text("Enter your credential to login"),
       ],
     );
   }
@@ -61,21 +55,9 @@ class SignupPage extends StatelessWidget {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                       borderSide: BorderSide.none),
-                  fillColor: Colors.white24.withOpacity(0.1),
+                  fillColor: Colors.purple.withOpacity(0.1),
                   filled: true,
                   prefixIcon: const Icon(Icons.person)),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                hintText: "Email",
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: BorderSide.none),
-                fillColor: Colors.white.withOpacity(0.1),
-                filled: true,
-                prefixIcon: const Icon(Icons.email),
-              ),
             ),
             const SizedBox(height: 10),
             TextField(
@@ -84,7 +66,7 @@ class SignupPage extends StatelessWidget {
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(18),
                     borderSide: BorderSide.none),
-                fillColor: Colors.white.withOpacity(0.1),
+                fillColor: Colors.purple.withOpacity(0.1),
                 filled: true,
                 prefixIcon: const Icon(Icons.password),
               ),
@@ -96,10 +78,10 @@ class SignupPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 shape: const StadiumBorder(),
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.teal,
+                backgroundColor: const Color.fromARGB(255, 71, 163, 102),
               ),
               child: const Text(
-                "Sign Up",
+                "Login",
                 style: TextStyle(fontSize: 20),
               ),
             )
@@ -109,21 +91,31 @@ class SignupPage extends StatelessWidget {
     );
   }
 
-  _login(context) {
+  _forgotPassword(context) {
+    return TextButton(
+      onPressed: () {},
+      child: const Text(
+        "Forgot password?",
+        style: TextStyle(color: Color.fromARGB(255, 103, 185, 65)),
+      ),
+    );
+  }
+
+  _signup(context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Already have an account? "),
+        const Text("Dont have an account? "),
         TextButton(
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
+              MaterialPageRoute(builder: (context) => const SignupPage()),
             );
           },
           child: const Text(
-            "Login",
-            style: TextStyle(color: Colors.teal),
+            "Sign Up",
+            style: TextStyle(color: Color.fromARGB(255, 103, 185, 65)),
           ),
         )
       ],
