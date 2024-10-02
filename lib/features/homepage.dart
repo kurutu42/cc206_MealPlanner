@@ -10,7 +10,6 @@ class MealPlannerHomePage extends StatefulWidget {
 }
 
 class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
-  // Initialize meal plans for each day of the week
   final Map<String, Map<String, String>> _weeklyMealPlan = {
     'Monday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
     'Tuesday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
@@ -40,7 +39,6 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Welcome Message with the User's Name
             Text(
               'Welcome, ${widget.userName}',
               style: TextStyle(
@@ -50,8 +48,6 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Section title for weekly meal plan
             Text(
               'This Week\'s Meal Plan',
               style: TextStyle(
@@ -61,8 +57,6 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
               ),
             ),
             const SizedBox(height: 10),
-
-            // Display meal plan cards in a grid
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -123,7 +117,6 @@ class MealCard extends StatefulWidget {
 }
 
 class _MealCardState extends State<MealCard> {
-  // Create TextEditingControllers for each meal type
   late TextEditingController _breakfastController;
   late TextEditingController _lunchController;
   late TextEditingController _dinnerController;
@@ -131,7 +124,7 @@ class _MealCardState extends State<MealCard> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with current meal plan values
+
     _breakfastController =
         TextEditingController(text: widget.mealPlan['Breakfast']);
     _lunchController = TextEditingController(text: widget.mealPlan['Lunch']);
@@ -140,7 +133,6 @@ class _MealCardState extends State<MealCard> {
 
   @override
   void dispose() {
-    // Dispose controllers when the widget is removed from the widget tree
     _breakfastController.dispose();
     _lunchController.dispose();
     _dinnerController.dispose();
@@ -158,7 +150,6 @@ class _MealCardState extends State<MealCard> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Display day name in bold and larger font
             Text(
               widget.day,
               style: TextStyle(
@@ -168,8 +159,6 @@ class _MealCardState extends State<MealCard> {
               ),
             ),
             const SizedBox(height: 25),
-
-            // Input fields for Breakfast, Lunch, and Dinner
             _buildMealInput(context, 'Breakfast', _breakfastController),
             const SizedBox(height: 25),
             _buildMealInput(context, 'Lunch', _lunchController),
@@ -181,18 +170,15 @@ class _MealCardState extends State<MealCard> {
     );
   }
 
-  // Helper method to build meal input fields
   Widget _buildMealInput(
       BuildContext context, String mealType, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Meal type label (Breakfast, Lunch, Dinner)
         Text(
           mealType,
           style: TextStyle(fontSize: 18, color: Colors.green[700]),
         ),
-        // TextField for meal input
         TextField(
           controller: controller,
           decoration: InputDecoration(
@@ -204,7 +190,6 @@ class _MealCardState extends State<MealCard> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 8),
           ),
           onChanged: (value) {
-            // Update the meal plan and notify the parent widget of the change
             widget.mealPlan[mealType] = value;
             widget.onMealPlanChanged(widget.mealPlan);
           },
