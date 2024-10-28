@@ -20,6 +20,19 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     'Sunday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
   };
 
+  final List<String> _images = [
+    'mealPlanner1.png',
+    'mealPlanner2.png'
+  ];
+
+  int _currentImageIndex = 0;
+
+  void _changeImage() {
+    setState(() {
+      _currentImageIndex = (_currentImageIndex + 1) % _images.length;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,31 +47,51 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 211, 244, 212),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Welcome, ${widget.userName}',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.green[800],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome, ${widget.userName}',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green[800],
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'This Week\'s Meal Plan',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: Colors.green[700],
+              const SizedBox(height: 20),
+              Text(
+                'This Week\'s Meal Plan',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.green[700],
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: GridView.builder(
+              const SizedBox(height: 10),
+              Center(
+                child: Column(
+                  children: [
+                    Image.asset(
+                      _images[_currentImageIndex],
+                      width: 1500,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _changeImage,
+                      child: const Text("Change Image"),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 15.0,
@@ -79,8 +112,8 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                   );
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
