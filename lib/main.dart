@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/login.dart';  /
+import 'package:cc206_mealplanner/features/login.dart';  
 
 void main() {
   runApp(const MyApp());
