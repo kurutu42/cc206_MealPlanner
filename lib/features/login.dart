@@ -1,5 +1,6 @@
+import 'package:cc206_mealplanner/features/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/homepage.dart';  
+import 'package:cc206_mealplanner/features/homepage.dart';  // Import homepage
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -151,7 +152,7 @@ class LoginPageState extends State<LoginPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SignupPage()),  
+              MaterialPageRoute(builder: (context) => const SignupPage()),
             );
           },
           child: const Text(

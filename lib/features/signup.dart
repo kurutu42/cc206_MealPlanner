@@ -49,20 +49,13 @@ class SignupPageState extends State<SignupPage> {
   }
 
   Widget _header() {
-    return Column(
+    return const Column(
       children: [
-        Image.network(
-          _isImageOneDisplayed
-              ? "https://scontent.fceb6-1.fna.fbcdn.net/v/t1.15752-9/461218601_515279471213388_6743303864073392043_n.png?_nc_cat=109&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeHbfnsQA0p5ADwrOnsQPcHmTiOUuP-KZyBOI5S4_4pnILL46m_Z6jOIphVsb3FpMoah3ig-pC30qbOlEa2LyZ9d&_nc_ohc=ac02w-JnOZ8Q7kNvgEDZcrf&_nc_ht=scontent.fceb6-1.fna&oh=03_Q7cD1QHprQ0mErdgerT_IQvXBDad7oGXhjCkaeNjXGkwpVPMKw&oe=6724D19C"
-              : "https://via.placeholder.com/100",
-          width: 100,
-          height: 100,
-        ),
-        const Text(
+        Text(
           "Create Account",
           style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
         ),
-        const Text("Enter your credentials to sign up"),
+        Text("Enter your credentials to sign up"),
       ],
     );
   }
