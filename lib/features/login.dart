@@ -1,22 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/signup.dart'; // Import the signup.dart file
+import 'package:cc206_mealplanner/features/homepage.dart';  
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
+  LoginPageState createState() => LoginPageState();
+}
+
+class LoginPageState extends State<LoginPage> {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool _isPasswordVisible = false;
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Container(
+    return Scaffold(
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.cyan.shade100,
+                Colors.green.shade500,
+              ],
+            ),
+          ),
           margin: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _header(context),
-              _inputField(context),
-              _forgotPassword(context),
+              _header(),
+              _inputField(),
               _signup(context),
             ],
           ),
@@ -25,99 +45,120 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  _header(context) {
+  Widget _header() {
     return Column(
-      children: [
-        Image.network(
-          "https://scontent.fceb6-1.fna.fbcdn.net/v/t1.15752-9/461218601_515279471213388_6743303864073392043_n.png?_nc_cat=109&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeHbfnsQA0p5ADwrOnsQPcHmTiOUuP-KZyBOI5S4_4pnILL46m_Z6jOIphVsb3FpMoah3ig-pC30qbOlEa2LyZ9d&_nc_ohc=ac02w-JnOZ8Q7kNvgEDZcrf&_nc_ht=scontent.fceb6-1.fna&oh=03_Q7cD1QHprQ0mErdgerT_IQvXBDad7oGXhjCkaeNjXGkwpVPMKw&oe=6724D19C",
-          width: 100,
-          height: 100,
-        ),
-        const Text(
+      children: const [
+        Text(
           "Welcome Back",
           style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
         ),
-        const Text("Enter your credential to login"),
+        Text("Enter your credentials to login"),
       ],
     );
   }
 
-  _inputField(context) {
+  Widget _inputField() {
     return Center(
       child: Container(
-        width: 300, // set the width you want
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              decoration: InputDecoration(
+        width: 300,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                controller: _usernameController,
+                decoration: InputDecoration(
                   hintText: "Username",
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(18),
-                      borderSide: BorderSide.none),
-                  fillColor: Colors.purple.withOpacity(0.1),
-                  filled: true,
-                  prefixIcon: const Icon(Icons.person)),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                hintText: "Password",
-                border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(18),
-                    borderSide: BorderSide.none),
-                fillColor: Colors.purple.withOpacity(0.1),
-                filled: true,
-                prefixIcon: const Icon(Icons.password),
+                    borderSide: BorderSide.none,
+                  ),
+                  fillColor: Colors.white24.withOpacity(0.1),
+                  filled: true,
+                  prefixIcon: const Icon(Icons.person),
+                ),
+                validator: (value) =>
+                    value!.isEmpty ? "Username is required" : null,
               ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                shape: const StadiumBorder(),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: const Color.fromARGB(255, 71, 163, 102),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: _passwordController,
+                obscureText: !_isPasswordVisible,
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                    borderSide: BorderSide.none,
+                  ),
+                  fillColor: Colors.white.withOpacity(0.1),
+                  filled: true,
+                  prefixIcon: const Icon(Icons.password),
+                  suffixIcon: IconButton(
+                    icon: Icon(_isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
+                ),
+                validator: (value) =>
+                    value!.length < 6 ? "Password must be at least 6 characters" : null,
               ),
-              child: const Text(
-                "Login",
-                style: TextStyle(fontSize: 20),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // Show success message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Login successful!")),
+                    );
+                    // Navigate to MealPlannerHomePage after successful login
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MealPlannerHomePage(userName: _usernameController.text),
+                      ),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: const StadiumBorder(),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.teal,
+                ),
+                child: const Text(
+                  "Login",
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  _forgotPassword(context) {
-    return TextButton(
-      onPressed: () {},
-      child: const Text(
-        "Forgot password?",
-        style: TextStyle(color: Color.fromARGB(255, 103, 185, 65)),
-      ),
-    );
-  }
-
-  _signup(context) {
+  Widget _signup(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Dont have an account? "),
+        const Text("Don't have an account? "),
         TextButton(
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SignupPage()),
+              MaterialPageRoute(builder: (context) => const SignupPage()),  
             );
           },
           child: const Text(
             "Sign Up",
-            style: TextStyle(color: Color.fromARGB(255, 103, 185, 65)),
+            style: TextStyle(color: Colors.teal),
           ),
-        )
+        ),
       ],
     );
   }
