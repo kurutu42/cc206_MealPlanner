@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/homepage.dart';  
+import 'package:cc206_mealplanner/features/homepage.dart';  // Import homepage
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
