@@ -1,5 +1,5 @@
-import 'package:cc206_mealplanner/features/login.dart';
 import 'package:flutter/material.dart';
+import 'package:cc206_mealplanner/features/login.dart'; 
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -137,8 +137,13 @@ class SignupPageState extends State<SignupPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    // After signup, redirect to LoginPage
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Account created successfully!")),
+                    );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginPage()),
                     );
                   }
                 },
@@ -181,7 +186,7 @@ class SignupPageState extends State<SignupPage> {
         const Text("Already have an account? "),
         TextButton(
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const LoginPage()),
             );
