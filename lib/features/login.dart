@@ -1,6 +1,6 @@
 import 'package:cc206_mealplanner/features/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/homepage.dart';  // Import homepage
+import 'package:cc206_mealplanner/features/homepage.dart'; // Import homepage
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -47,8 +47,8 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Widget _header() {
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         Text(
           "Welcome Back",
           style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
@@ -60,7 +60,7 @@ class LoginPageState extends State<LoginPage> {
 
   Widget _inputField() {
     return Center(
-      child: Container(
+      child: SizedBox(
         width: 300,
         child: Form(
           key: _formKey,
@@ -106,8 +106,9 @@ class LoginPageState extends State<LoginPage> {
                     },
                   ),
                 ),
-                validator: (value) =>
-                    value!.length < 6 ? "Password must be at least 6 characters" : null,
+                validator: (value) => value!.length < 6
+                    ? "Password must be at least 6 characters"
+                    : null,
               ),
               const SizedBox(height: 10),
               ElevatedButton(
@@ -121,7 +122,8 @@ class LoginPageState extends State<LoginPage> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MealPlannerHomePage(userName: _usernameController.text),
+                        builder: (context) => MealPlannerHomePage(
+                            userName: _usernameController.text),
                       ),
                     );
                   }

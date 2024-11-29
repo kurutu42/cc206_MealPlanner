@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cc206_mealplanner/features/CalendarScreen.dart';
 
 class MealPlannerHomePage extends StatefulWidget {
   final String userName;
@@ -20,10 +21,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     'Sunday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
   };
 
-  final List<String> _images = [
-    'mealPlanner1.png',
-    'mealPlanner2.png'
-  ];
+  final List<String> _images = ['mealPlanner1.png', 'mealPlanner2.png'];
 
   int _currentImageIndex = 0;
 
@@ -46,6 +44,19 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
         ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 211, 244, 212),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EventCalendarScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
