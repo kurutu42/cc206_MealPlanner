@@ -171,11 +171,11 @@ class SignupPageState extends State<SignupPage> {
           _isImageOneDisplayed = !_isImageOneDisplayed;
         });
       },
-      child: const Text("Toggle Image"),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.orangeAccent,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
+      child: const Text("Toggle Image"),
     );
   }
 

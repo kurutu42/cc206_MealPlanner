@@ -47,8 +47,8 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Widget _header() {
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         Text(
           "Welcome Back",
           style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
