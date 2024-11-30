@@ -13,8 +13,6 @@ void main() {
     (context) => MyApp();
 }
 
-
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -82,7 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
             height: _height ?? 0.0,
             allergies: _allergies ?? 'No allergies',
             age: _age ?? 'Not provided',
-            profileImage: _profileImage ?? File('default_image_path.png'),
+            profileImage: _profileImage ?? File('default1.png'),
           ),
         ),
       );
@@ -106,13 +104,83 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          // Form or Display Information
+          // Content on the screen
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey, // Pass the form key here
-                child: _buildProfileForm(), // Call the form builder method
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start, // Align images to top
+                children: [
+                  // The Form on the Upper Left
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Form(
+                      key: _formKey, // Pass the form key here
+                      child: _buildProfileForm(), // Call the form builder method
+                    ),
+                  ),
+                  const SizedBox(height: 10), // Small space between form and images
+
+                  // The Images in the Center, with the "Grow" image next to "Go"
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center, // Align both images horizontally centered
+                    children: [
+                      // Go Image with Label
+                      Column(
+                        children: [
+                          Image.asset(
+                            'assets/go.png', // Image for Go
+                            width: 650, // Adjust width to 650 pixels
+                            height: 650, // Adjust height to 650 pixels
+                          ),
+                          const Text(
+                            "Go",
+                            style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 20), // Small space between Go and Grow
+                      // Grow Image with Label (aligned next to Go)
+                      Column(
+                        children: [
+                          Image.asset(
+                            'assets/grow.png', // Image for Grow
+                            width: 650, // Adjust width to 650 pixels
+                            height: 650, // Adjust height to 650 pixels
+                          ),
+                          const Text(
+                            "Grow",
+                            style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10), // Small space between images and Glow
+                  // Glow Image with Label
+                  Column(
+                    children: [
+                      Image.asset(
+                        'assets/glow.png', // Image for Glow
+                        width: 650, // Adjust width to 650 pixels
+                        height: 650, // Adjust height to 650 pixels
+                      ),
+                      const Text(
+                        "Glow",
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
@@ -198,7 +266,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 20), 
 
         // Height Field - Left aligned
         Align(
