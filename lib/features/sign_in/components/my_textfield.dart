@@ -10,13 +10,13 @@ class MyTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.hintText,
-    required this.obscureText,
+    required this.obscureText, required String? Function(String? value) validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (val) => val!.isEmpty ? 'Veuillez remplir ce champ svp' : null,
+      validator: (val) => val!.isEmpty ? 'Enter valid email' : null,
       controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(
@@ -42,13 +42,13 @@ class MyPasswordTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.hintText,
-    required this.obscureText,
+    required this.obscureText, required String? Function(String? value) validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (val) => val!.isEmpty ? 'Veuillez remplir ce champ svp' : null,
+      validator: (val) => val!.isEmpty ? 'Enter Password' : null,
       controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(

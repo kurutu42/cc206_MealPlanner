@@ -1,31 +1,56 @@
-// ignore_for_file: sized_box_for_whitespace
 import 'dart:ui';
-
-import 'package:flutter/material.dart';
 import 'package:cc206_mealplanner/features/sign_in/components/my_button.dart';
 import 'package:cc206_mealplanner/features/sign_in/components/my_textfield.dart';
-import 'package:cc206_mealplanner/features/sign_in/components/square_tile.dart';
-import 'package:cc206_mealplanner/features/sign_in/login.dart';
+import 'package:flutter/material.dart';
+import 'login.dart'; // Import login page
 
 class Signup extends StatelessWidget {
-  Signup({Key? key}) : super(key: key);
+  Signup({super.key});
 
-  // Text editing controllers
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
-  final double _sigmaX = 5; // Blur intensity
+  final double _sigmaX = 5;
   final double _sigmaY = 5;
   final double _opacity = 0.2;
 
   final _formKey = GlobalKey<FormState>();
 
-  // Sign user in method
-  void signUserIn() {
+  // Validate email
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+    if (!emailRegex.hasMatch(value)) {
+      return 'Enter a valid email';
+    }
+    return null;
+  }
+
+  // Validate password
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
+
+  // Sign user up and navigate to login page
+  void signUserIn(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      print('valid');
+      print('Form is valid');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginPage(),
+        ),
+      );
     } else {
-      print('not valid');
+      print('Form is not valid');
     }
   }
 
@@ -104,12 +129,14 @@ class Signup extends StatelessWidget {
                                   controller: usernameController,
                                   hintText: 'Email',
                                   obscureText: false,
+                                  validator: validateEmail,
                                 ),
                                 const SizedBox(height: 10),
                                 MyPasswordTextField(
                                   controller: passwordController,
                                   hintText: 'Password',
                                   obscureText: true,
+                                  validator: validatePassword,
                                 ),
                                 const SizedBox(height: 30),
                                 Column(
@@ -141,15 +168,7 @@ class Signup extends StatelessWidget {
                                     const SizedBox(height: 10),
                                     MyButtonAgree(
                                       text: "Agree and Continue",
-                                      onTap: () {
-                                        signUserIn();
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => LoginPage(),
-                                          ),
-                                        );
-                                      },
+                                      onTap: () => signUserIn(context),
                                     ),
                                   ],
                                 ),

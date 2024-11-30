@@ -12,15 +12,23 @@ class WelcomePage extends StatelessWidget {
 
   // Text editing controllers
   final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
 
   final double _sigmaX = 5; // Blur intensity for X
   final double _sigmaY = 5; // Blur intensity for Y
   final double _opacity = 0.2;
   final _formKey = GlobalKey<FormState>();
 
-  // Sign user in method
-  void signUserIn() {}
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    // Regex for email validation
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+    if (!emailRegex.hasMatch(value)) {
+      return 'Enter a valid email';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +73,11 @@ class WelcomePage extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
-                          color:
-                              const Color.fromRGBO(0, 0, 0, 1).withOpacity(_opacity),
-                          borderRadius: const BorderRadius.all(Radius.circular(30)),
+                          color: const Color.fromRGBO(0, 0, 0, 1)
+                              .withOpacity(_opacity),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(30),
+                          ),
                         ),
                         width: MediaQuery.of(context).size.width * 0.85, // Adjusted width
                         child: Form(
@@ -81,6 +91,7 @@ class WelcomePage extends StatelessWidget {
                                   controller: usernameController,
                                   hintText: 'Email',
                                   obscureText: false,
+                                  validator: validateEmail,
                                 ),
                                 const SizedBox(height: 10),
 
@@ -95,7 +106,7 @@ class WelcomePage extends StatelessWidget {
                                         ),
                                       );
                                     } else {
-                                      print('not valid');
+                                      print('Form is not valid');
                                     }
                                   },
                                 ),
@@ -111,8 +122,8 @@ class WelcomePage extends StatelessWidget {
                                       ),
                                     ),
                                     const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 10.0),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.0),
                                       child: Text(
                                         'Or',
                                         style: TextStyle(
@@ -162,7 +173,8 @@ class WelcomePage extends StatelessWidget {
                                 const Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       Row(
                                         children: [
@@ -189,8 +201,8 @@ class WelcomePage extends StatelessWidget {
                                       Text(
                                         'Forgot Password?',
                                         style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 71, 233, 133),
+                                          color: Color.fromARGB(
+                                              255, 71, 233, 133),
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
                                         ),

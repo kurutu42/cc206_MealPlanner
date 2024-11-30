@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:ui';
+import 'package:cc206_mealplanner/features/homepage.dart';
 import 'package:cc206_mealplanner/features/sign_in/components/my_button.dart';
 import 'package:cc206_mealplanner/features/sign_in/components/my_textfield.dart';
 import 'package:flutter/material.dart';
@@ -116,11 +117,12 @@ class LoginPage extends StatelessWidget {
                                 SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         0.03),
-                                MyTextField(
-                                  controller: passwordController,
-                                  hintText: 'Password',
-                                  obscureText: true,
-                                ),
+                               MyTextField(
+  controller: passwordController,
+  hintText: 'Password',
+  obscureText: true,
+  validator: (val) => val!.isEmpty ? 'Enter valid password' : null,  // Add validator here
+),
                                 SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         0.03),
@@ -130,7 +132,8 @@ class LoginPage extends StatelessWidget {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => LoginPage()));
+                                            builder: (context) => MealPlannerHomePage(userName: '',)));
+                                            
                                   },
                                 ),
                                 const SizedBox(height: 30),
