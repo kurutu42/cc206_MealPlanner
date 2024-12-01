@@ -1,31 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:device_preview/device_preview.dart';
 import 'dart:io';
-
-
-void main() => runApp(
-  DevicePreview(
-    enabled: !kReleaseMode,
-    builder: (context) => const MyApp(), // Wrap your app
-  ),
-);
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      // ignore: deprecated_member_use
-      useInheritedMediaQuery: true,
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-    );
-  }
-}
+import 'dart:typed_data'; // For Uint8List support (Web)
 
 class ProfileDisplayPage extends StatelessWidget {
   final String name;
@@ -33,7 +8,8 @@ class ProfileDisplayPage extends StatelessWidget {
   final double height;
   final String allergies;
   final String age;
-  final File? profileImage;
+  final File? profileImage; // Image file for non-web platforms
+  final Uint8List? webImage; // Image for web platforms
 
   const ProfileDisplayPage({
     super.key,
@@ -42,7 +18,8 @@ class ProfileDisplayPage extends StatelessWidget {
     required this.height,
     required this.allergies,
     required this.age,
-    this.profileImage,
+    this.profileImage, // Image for non-web platforms
+    this.webImage, // Image for web platforms
   });
 
   @override
@@ -54,8 +31,8 @@ class ProfileDisplayPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/background2.jpg'), // Set your background image here
-            fit: BoxFit.cover, // Cover the entire screen
+            image: AssetImage('assets/background2.jpg'), // Background image
+            fit: BoxFit.cover,
           ),
         ),
         child: Center(
@@ -67,9 +44,15 @@ class ProfileDisplayPage extends StatelessWidget {
                 children: [
                   // Profile Image Display
                   CircleAvatar(
-                    radius: 50,
-                    backgroundImage: profileImage != null ? FileImage(profileImage!) : const AssetImage('assets/default1.png'), // Default image
-                    child: profileImage == null ? const Icon(Icons.account_circle, size: 50) : null,
+                    radius: 80,
+                    backgroundImage: _getProfileImage(),
+                    child: (profileImage == null && webImage == null)
+                        ? const Icon(
+                            Icons.account_circle,
+                            size: 50,
+                            color: Colors.white,
+                          )
+                        : null,
                   ),
                   const SizedBox(height: 20),
 
@@ -88,7 +71,18 @@ class ProfileDisplayPage extends StatelessWidget {
     );
   }
 
-  /// Helper method to create a display box for profile information.
+  // Helper method to get the correct image for profileImage or webImage.
+  ImageProvider _getProfileImage() {
+    if (webImage != null) {
+      return MemoryImage(webImage!); // Use web image for web platform
+    } else if (profileImage != null) {
+      return FileImage(profileImage!); // Use file for non-web platforms
+    } else {
+      return const AssetImage('assets/default1.png'); // Default image if no profile image
+    }
+  }
+
+  // Helper method to create a display box for profile information.
   Widget _buildInfoBox(String label, String value) {
     return Container(
       width: 450, // Set a fixed width for the boxes
@@ -106,18 +100,19 @@ class ProfileDisplayPage extends StatelessWidget {
         ],
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min, // Make the row take minimum space
-        mainAxisAlignment: MainAxisAlignment.center, // Center the content horizontally
+        mainAxisSize: MainAxisSize.min, // Take minimum space
+        mainAxisAlignment: MainAxisAlignment.center, // Center content
         children: [
           Text(
             "$label: ",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black), // Change text color for visibility
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(fontSize: 18, color: Colors.black), // Change text color for visibility
-              textAlign: TextAlign.center, // Center the text
+              style: const TextStyle(fontSize: 18, color: Colors.black),
+              textAlign: TextAlign.center, // Center text
             ),
           ),
         ],

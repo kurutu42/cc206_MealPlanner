@@ -1,16 +1,14 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'package:cc206_mealplanner/features/profiledisplay.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cc206_mealplanner/features/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:device_preview/device_preview.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart'; // For kIsWeb
+
+// Import your ProfileDisplay page
+import 'package:cc206_mealplanner/features/profiledisplay.dart';
 
 void main() {
   runApp(const MyApp());
-  !kReleaseMode;
-    (context) => MyApp();
 }
 
 class MyApp extends StatelessWidget {
@@ -19,15 +17,38 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Meal Planner',
-       // ignore: deprecated_member_use
-       useInheritedMediaQuery: true,
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('SmartPlates'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MealPlannerHomePage(userName: '',),
+                  ),
+                );
+              },
+              child: const Text('Home'),
+            ),
+
+            
+             const SizedBox(width: 10),
+            TextButton(onPressed: () {}, child: const Text('Profile')),
+            const SizedBox(width: 10),
+            TextButton(onPressed: () {}, child: const Text('Create Meal')),
+            const SizedBox(width: 10),
+            TextButton(onPressed: () {}, child: const Text('Calendar')),
+            const SizedBox(width: 10),
+            TextButton(onPressed: () {}, child: const Text('Logout')),
+            const SizedBox(width: 10),
+            const CircleAvatar(backgroundImage: AssetImage('assets/img1.jpg')),
+            const SizedBox(width: 30),
+          ],
+        ),
+        body: const ProfilePage(),
       ),
-      home: const ProfilePage(),
     );
   }
 }
@@ -46,23 +67,27 @@ class _ProfilePageState extends State<ProfilePage> {
   double? _height;
   String? _allergies;
   String? _age;
-  File? _profileImage;
+  File? _profileImage; // For non-web platforms
+  Uint8List? _webImage; // For web platforms
 
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    
+
     if (pickedFile != null) {
-      setState(() {
-        try {
+      if (kIsWeb) {
+        // For web, use Uint8List
+        final webImage = await pickedFile.readAsBytes();
+        setState(() {
+          _webImage = webImage;
+        });
+      } else {
+        // For non-web, use File
+        setState(() {
           _profileImage = File(pickedFile.path);
-        } catch (e) {
-          print("Error loading image: $e");
-        }
-      });
-    } else {
-      print("No image selected.");
+        });
+      }
     }
   }
 
@@ -70,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Ensure that the values being passed are not null
+      // Navigate to the profile display page
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -80,7 +105,8 @@ class _ProfilePageState extends State<ProfilePage> {
             height: _height ?? 0.0,
             allergies: _allergies ?? 'No allergies',
             age: _age ?? 'Not provided',
-            profileImage: _profileImage ?? File('default1.png'),
+            profileImage: _profileImage, // Pass the File for non-web
+            webImage: _webImage, // Pass the Uint8List for Web platforms
           ),
         ),
       );
@@ -90,12 +116,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Profile"),
-      ),
       body: Stack(
         children: [
-          // Background Image
+          // Background image
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -104,83 +127,17 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          // Content on the screen
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start, // Align images to top
-                children: [
-                  // The Form on the Upper Left
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Form(
-                      key: _formKey, // Pass the form key here
-                      child: _buildProfileForm(), // Call the form builder method
-                    ),
-                  ),
-                  const SizedBox(height: 10), // Small space between form and images
-
-                  // The Images in the Center, with the "Grow" image next to "Go"
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center, // Align both images horizontally centered
-                    children: [
-                      // Go Image with Label
-                      Column(
-                        children: [
-                          Image.asset(
-                            'assets/go.png', // Image for Go
-                            width: 650, // Adjust width to 650 pixels
-                            height: 650, // Adjust height to 650 pixels
-                          ),
-                          const Text(
-                            "Go",
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 20), // Small space between Go and Grow
-                      // Grow Image with Label (aligned next to Go)
-                      Column(
-                        children: [
-                          Image.asset(
-                            'assets/grow.png', // Image for Grow
-                            width: 650, // Adjust width to 650 pixels
-                            height: 650, // Adjust height to 650 pixels
-                          ),
-                          const Text(
-                            "Grow",
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10), // Small space between images and Glow
-                  // Glow Image with Label
-                  Column(
-                    children: [
-                      Image.asset(
-                        'assets/glow.png', // Image for Glow
-                        width: 650, // Adjust width to 650 pixels
-                        height: 650, // Adjust height to 650 pixels
-                      ),
-                      const Text(
-                        "Glow",
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+          // Content
+          SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 50.0),
+                child: Column(
+                  children: [
+                    // Profile Card
+                    _buildProfileCard(context),
+                  ],
+                ),
               ),
             ),
           ),
@@ -189,162 +146,120 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // Build Profile Form
-  Widget _buildProfileForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,  // Align items to the start (left)
-      children: [
-        // Align the profile image to the left
-        Align(
-          alignment: Alignment.centerLeft,
-          child: GestureDetector(
-            onTap: _pickImage,
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: _profileImage != null
-                  ? FileImage(_profileImage!)
-                  : const AssetImage('assets/default1.png'), // Default image
-              child: _profileImage == null
-                  ? const Icon(
-                      Icons.add_a_photo,
-                      size: 50,
-                    )
-                  : null,
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        
-        // Name Field - Left aligned
-        Align(
-          alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 250, // Set a fixed width for the TextFormField
-            child: TextFormField(
-              decoration: InputDecoration(
-                labelText: "Name",
-                border: const OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white.withOpacity(0.8),
+  Widget _buildProfileCard(BuildContext context) {
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Smaller padding
+        child: Column(
+          children: [
+            // Profile Image
+            GestureDetector(
+              onTap: _pickImage,
+              child: CircleAvatar(
+                radius: 50, // Smaller avatar size
+                backgroundImage: _getProfileImage(),
+                child: (_profileImage == null && _webImage == null)
+                    ? const Icon(
+                        Icons.add_a_photo,
+                        size: 35, // Smaller icon
+                        color: Colors.white,
+                      )
+                    : null,
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter your name.";
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _name = value;
-              },
             ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        
-        // Weight Field - Left aligned
-        Align(
-          alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 250,
-            child: TextFormField(
-              decoration: InputDecoration(
-                labelText: "Weight (kg)",
-                border: const OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white.withOpacity(0.8),
+            const SizedBox(height: 15), // Reduced height
+            // Form Fields
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  _buildTextField(
+                    label: "Name",
+                    onSave: (value) => _name = value,
+                    validator: (value) =>
+                        value == null || value.isEmpty ? "Enter your name" : null,
+                  ),
+                  const SizedBox(height: 12), // Reduced space between fields
+                  _buildTextField(
+                    label: "Weight (kg)",
+                    keyboardType: TextInputType.number,
+                    onSave: (value) => _weight = double.tryParse(value!),
+                    validator: (value) =>
+                        value == null || value.isEmpty ? "Enter your weight" : null,
+                  ),
+                  const SizedBox(height: 12), // Reduced space between fields
+                  _buildTextField(
+                    label: "Height (cm)",
+                    keyboardType: TextInputType.number,
+                    onSave: (value) => _height = double.tryParse(value!),
+                    validator: (value) =>
+                        value == null || value.isEmpty ? "Enter your height" : null,
+                  ),
+                  const SizedBox(height: 12), // Reduced space between fields
+                  _buildTextField(
+                    label: "Allergies",
+                    onSave: (value) => _allergies = value,
+                  ),
+                  const SizedBox(height: 12), // Reduced space between fields
+                  _buildTextField(
+                    label: "Age",
+                    keyboardType: TextInputType.number,
+                    onSave: (value) => _age = value,
+                  ),
+                  const SizedBox(height: 20), // Reduced space before button
+                  ElevatedButton(
+                    onPressed: _saveProfile,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 12), // Smaller padding
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      "Update Profile",
+                      style: TextStyle(fontSize: 16), // Smaller text size
+                    ),
+                  ),
+                ],
               ),
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter your weight.";
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _weight = double.tryParse(value!);
-              },
             ),
-          ),
+          ],
         ),
-        const SizedBox(height: 20), 
+      ),
+    );
+  }
 
-        // Height Field - Left aligned
-        Align(
-          alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 250,
-            child: TextFormField(
-              decoration: InputDecoration(
-                labelText: "Height (cm)",
-                border: const OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white.withOpacity(0.8),
-              ),
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter your height.";
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _height = double.tryParse(value!);
-              },
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
+  ImageProvider _getProfileImage() {
+    if (kIsWeb && _webImage != null) {
+      return MemoryImage(_webImage!); // Use web image for web platform
+    } else if (_profileImage != null) {
+      return FileImage(_profileImage!); // Use file for other platforms
+    } else {
+      return const AssetImage('assets/default1.png'); // Default image
+    }
+  }
 
-        // Allergies Field - Left aligned
-        Align(
-          alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 400,
-            child: TextFormField(
-              decoration: InputDecoration(
-                labelText: "Allergies",
-                border: const OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white.withOpacity(0.8),
-              ),
-              onSaved: (value) {
-                _allergies = value;
-              },
-            ),
-          ),
+  Widget _buildTextField({
+    required String label,
+    TextInputType keyboardType = TextInputType.text,
+    required void Function(String?) onSave,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-        const SizedBox(height: 20),
-
-        // age Me Field - Left aligned
-        Align(
-          alignment: Alignment.centerLeft,
-          child: SizedBox(
-            width: 70,
-            height: 200, // Reduce height to make the form more compact
-            child: TextFormField(
-              decoration: InputDecoration(
-                labelText: "Age",
-                border: const OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white.withOpacity(0.8),
-              ),
-              onSaved: (value) {
-                _age = value;
-              },
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-
-        // Save Button - Left aligned
-        Align(
-          alignment: Alignment.centerLeft,
-          child: ElevatedButton(
-            onPressed: _saveProfile,
-            child: const Text("Save Profile"),
-          ),
-        ),
-      ],
+        filled: true,
+        fillColor: Colors.grey[100]?.withOpacity(0.9),
+      ),
+      keyboardType: keyboardType,
+      onSaved: onSave,
+      validator: validator,
     );
   }
 }
