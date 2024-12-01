@@ -69,9 +69,6 @@ flutter:
     - assets/mealPlanner2.png
     - assets/default1.png
     - assets/background2.jpg
-    - assets/go.png 
-    - assets/glow.png
-    - assets/grow.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
