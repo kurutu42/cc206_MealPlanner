@@ -1,3 +1,4 @@
+import 'package:cc206_mealplanner/features/login.dart';
 import 'package:flutter/material.dart';
 import 'package:cc206_mealplanner/features/CalendarScreen.dart';
 
@@ -36,7 +37,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Meal Planner',
+          'SmartPlates',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -45,17 +46,33 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 211, 244, 212),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.calendar_today),
+          TextButton(onPressed: () {}, child: const Text('Home')),
+          const SizedBox(width: 10),
+          TextButton(onPressed: () {}, child: const Text('Profile')),
+          const SizedBox(width: 10),
+          TextButton(onPressed: () {}, child: const Text('Create Meal')),
+          const SizedBox(width: 10),
+          TextButton(
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const EventCalendarScreen(),
-                ),
+                    builder: (context) => const EventCalendarScreen()),
               );
             },
+            child: const Text('Calendar'),
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            },
+            child: const Text('Logout'),
+          ),
+          const CircleAvatar(backgroundImage: AssetImage('assets/img1.jpg')),
+          const SizedBox(width: 30),
         ],
       ),
       body: SingleChildScrollView(

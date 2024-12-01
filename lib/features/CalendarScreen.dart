@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/homepage.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Event {
@@ -96,67 +95,73 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Event Calendar'),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.red[300],
       ),
-      body: Column(
-        children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2000, 1, 1),
-            lastDay: DateTime.utc(2100, 12, 31),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            eventLoader: _getEventsForDay,
-            onDaySelected: _onDaySelected,
-            onRangeSelected: _onRangeSelected,
-            onFormatChanged: (format) {
-              setState(() {
-                _calendarFormat = format;
-              });
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-            calendarStyle: CalendarStyle(
-              outsideDaysVisible: false,
-              todayDecoration: BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.circle,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/calendarbg.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(16.0),
+                border: Border.all(
+                  color: Colors.white10,
+                  width: 2.0,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    offset: Offset(2, 2),
+                    blurRadius: 8.0,
+                  ),
+                ],
               ),
-              selectedDecoration: BoxDecoration(
-                color: Colors.green,
-                shape: BoxShape.circle,
+              child: TableCalendar(
+                firstDay: DateTime.utc(2000, 1, 1),
+                lastDay: DateTime.utc(2100, 12, 31),
+                focusedDay: _focusedDay,
+                calendarFormat: _calendarFormat,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                onDaySelected: _onDaySelected,
+                onRangeSelected: _onRangeSelected,
+                onFormatChanged: (format) {
+                  setState(() {
+                    _calendarFormat = format;
+                  });
+                },
+                onPageChanged: (focusedDay) {
+                  setState(() {
+                    _focusedDay = focusedDay;
+                  });
+                },
+                calendarStyle: CalendarStyle(
+                  outsideDaysVisible: false,
+                  todayDecoration: BoxDecoration(
+                    color: Colors.blue,
+                    shape: BoxShape.circle,
+                  ),
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.red[300],
+                    shape: BoxShape.circle,
+                  ),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8.0),
-          Expanded(
-            child: ValueListenableBuilder<List<Event>>(
-              valueListenable: _selectedEvents,
-              builder: (context, events, _) {
-                return ListView.builder(
-                  itemCount: events.length,
-                  itemBuilder: (context, index) {
-                    final event = events[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      child: ListTile(
-                        title: Text(event.title),
-                        subtitle: Text(event.description),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddEventDialog(),
+        onPressed: _showAddEventDialog,
         child: const Icon(Icons.add),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.red[200],
       ),
     );
   }
@@ -169,17 +174,17 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Add Event'),
+          title: const Text('Food Plan'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(labelText: 'Title'),
+                decoration: const InputDecoration(labelText: 'Meal'),
               ),
               TextField(
                 controller: descriptionController,
-                decoration: const InputDecoration(labelText: 'Description'),
+                decoration: const InputDecoration(labelText: 'Drinks'),
               ),
             ],
           ),
