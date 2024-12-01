@@ -44,8 +44,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
       appBar: AppBar(
         title: const Text('SmartPlates'),
         actions: [
-          TextButton(onPressed: () {}, child: const Text('Home')),
-          const SizedBox(width: 10),
+        
           TextButton(
   onPressed: () {
     Navigator.push(
