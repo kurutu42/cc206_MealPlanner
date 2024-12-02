@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:cc206_mealplanner/features/login.dart';
 
 class Event {
   final String title;
@@ -18,11 +19,8 @@ class EventCalendarScreen extends StatefulWidget {
 class _EventCalendarScreenState extends State<EventCalendarScreen> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
 
   final Map<DateTime, List<Event>> _events = {};
 
@@ -43,49 +41,26 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     return _events[day] ?? [];
   }
 
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
-    final days = List.generate(end.difference(start).inDays + 1,
-        (index) => DateTime(start.year, start.month, start.day + index));
-    return days.expand((day) => _getEventsForDay(day)).toList();
-  }
-
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
-        _rangeStart = null;
-        _rangeEnd = null;
-        _rangeSelectionMode = RangeSelectionMode.toggledOff;
       });
       _selectedEvents.value = _getEventsForDay(selectedDay);
     }
   }
 
-  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
-    setState(() {
-      _selectedDay = null;
-      _focusedDay = focusedDay;
-      _rangeStart = start;
-      _rangeEnd = end;
-      _rangeSelectionMode = RangeSelectionMode.toggledOn;
-    });
-
-    if (start != null && end != null) {
-      _selectedEvents.value = _getEventsForRange(start, end);
-    } else if (start != null) {
-      _selectedEvents.value = _getEventsForDay(start);
-    } else if (end != null) {
-      _selectedEvents.value = _getEventsForDay(end);
-    }
-  }
-
   void _addEvent(String title, String description) {
-    if (_selectedDay == null) return;
+    if (_selectedDay == null || title.isEmpty || description.isEmpty) return;
 
     final event = Event(title: title, description: description);
     setState(() {
-      _events[_selectedDay!] = [..._getEventsForDay(_selectedDay!), event];
+      if (_events[_selectedDay!] != null) {
+        _events[_selectedDay!]!.add(event);
+      } else {
+        _events[_selectedDay!] = [event];
+      }
       _selectedEvents.value = _getEventsForDay(_selectedDay!);
     });
   }
@@ -94,8 +69,38 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Calendar'),
+        title: const Text('Meal Plan Calendar'),
         backgroundColor: Colors.red[300],
+        centerTitle: true,
+        actions: [
+          TextButton(onPressed: () {}, child: const Text('Home')),
+          const SizedBox(width: 10),
+          TextButton(onPressed: () {}, child: const Text('Profile')),
+          const SizedBox(width: 10),
+          TextButton(onPressed: () {}, child: const Text('Create Meal')),
+          const SizedBox(width: 10),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const EventCalendarScreen()),
+              );
+            },
+            child: const Text('Calendar'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            },
+            child: const Text('Logout'),
+          ),
+          const CircleAvatar(backgroundImage: AssetImage('assets/img1.jpg')),
+          const SizedBox(width: 30),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -112,10 +117,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(16.0),
-                border: Border.all(
-                  color: Colors.white10,
-                  width: 2.0,
-                ),
+                border: Border.all(color: Colors.white10, width: 2.0),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
@@ -131,7 +133,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 calendarFormat: _calendarFormat,
                 selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 onDaySelected: _onDaySelected,
-                onRangeSelected: _onRangeSelected,
                 onFormatChanged: (format) {
                   setState(() {
                     _calendarFormat = format;
@@ -155,54 +156,70 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _mealPlanBox("Breakfast"),
+                  _mealPlanBox("Lunch"),
+                  _mealPlanBox("Dinner"),
+                ],
+              ),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showAddEventDialog,
+        onPressed: _navigateToMealPlanner,
         child: const Icon(Icons.add),
         backgroundColor: Colors.red[200],
       ),
     );
   }
 
-  void _showAddEventDialog() {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
+  void _navigateToMealPlanner() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Food Plan'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Meal'),
-              ),
-              TextField(
-                controller: descriptionController,
-                decoration: const InputDecoration(labelText: 'Drinks'),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _addEvent(titleController.text, descriptionController.text);
-                Navigator.pop(context);
-              },
-              child: const Text('Add'),
+  Widget _mealPlanBox(String label) {
+    return Expanded(
+      child: Container(
+        constraints: BoxConstraints(
+          minHeight: 300,
+          maxHeight: 320,
+        ),
+        padding: const EdgeInsets.all(16.0),
+        margin: const EdgeInsets.symmetric(horizontal: 4.0),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.8),
+          borderRadius: BorderRadius.circular(16.0),
+          border: Border.all(color: Colors.white10, width: 2.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: Offset(2, 2),
+              blurRadius: 8.0,
             ),
           ],
-        );
-      },
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.red[300],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

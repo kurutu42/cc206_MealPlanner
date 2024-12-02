@@ -114,11 +114,10 @@ class LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Show success message
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Login successful!")),
                     );
-                    // Navigate to MealPlannerHomePage after successful login
+
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
