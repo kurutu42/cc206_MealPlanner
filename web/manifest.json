@@ -1,6 +1,6 @@
 {
-    "name": "cc206_mealplanner",
-    "short_name": "cc206_mealplanner",
+    "name": "create_meal",
+    "short_name": "create_meal",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

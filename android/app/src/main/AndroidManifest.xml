@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="cc206_mealplanner"
+        android:label="create_meal"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,4 +1,4 @@
-package com.example.cc206_mealplanner
+package com.example.create_meal
 
 import io.flutter.embedding.android.FlutterActivity
 

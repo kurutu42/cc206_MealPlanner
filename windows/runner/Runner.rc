@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "cc206_mealplanner" "\0"
+            VALUE "FileDescription", "create_meal" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "cc206_mealplanner" "\0"
+            VALUE "InternalName", "create_meal" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "cc206_mealplanner.exe" "\0"
-            VALUE "ProductName", "cc206_mealplanner" "\0"
+            VALUE "OriginalFilename", "create_meal.exe" "\0"
+            VALUE "ProductName", "create_meal" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
