@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/login.dart';  
+import 'package:cc206_mealplanner/features/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,12 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Meal Planner App',
+      title: 'SmartPlates',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const LoginPage(), // Set LoginPage as the starting screen
+      home: const LoginPage(),
     );
   }
 }

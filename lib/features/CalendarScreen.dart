@@ -69,7 +69,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Meal Plan Calendar'),
+        title: const Text('SmartPlates'),
         backgroundColor: Colors.white30,
         actions: [
           TextButton(
