@@ -1,4 +1,4 @@
-import 'package:create_meal/features/calendar.dart';
+import 'package:cc206_mealplanner/features/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart'; // Import the intl package for date formatting
