@@ -1,3 +1,4 @@
+import 'package:cc206_mealplanner/main.dart';
 import 'package:flutter/material.dart';
 import 'package:cc206_mealplanner/features/profile.dart';
 
@@ -73,7 +74,15 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
           const SizedBox(width: 10),
           TextButton(onPressed: () {}, child: const Text('Calendar')),
           const SizedBox(width: 10),
-          TextButton(onPressed: () {}, child: const Text('Logout')),
+          TextButton(onPressed: () {
+            Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfilePage(),
+                  ),
+                );
+
+          }, child: const Text('Logout')),
           const SizedBox(width: 10),
           const CircleAvatar(backgroundImage: AssetImage('assets/img1.jpg')),
           const SizedBox(width: 30),

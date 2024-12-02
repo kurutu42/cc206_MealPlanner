@@ -1,3 +1,4 @@
+import 'package:cc206_mealplanner/features/homepage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:typed_data'; // For Uint8List support (Web)
@@ -22,11 +23,49 @@ class ProfileDisplayPage extends StatelessWidget {
     this.webImage, // Image for web platforms
   });
 
+  // Static method for AppBar button actions (for example)
+  static void navigateToHomePage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MealPlannerHomePage(userName: ''),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile Information'),
+        actions: [
+          // Using static method for navigation
+          TextButton(
+            onPressed: () => ProfileDisplayPage.navigateToHomePage(context),
+            child: const Text('Home'),
+          ),
+          TextButton(
+            onPressed: () {},
+            child: const Text('Profile'),
+          ),
+          TextButton(
+            onPressed: () {},
+            child: const Text('Create Meal'),
+          ),
+          const SizedBox(width: 10),
+          TextButton(
+            onPressed: () {},
+            child: const Text('Calendar'),
+          ),
+          const SizedBox(width: 10),
+          TextButton(
+            onPressed: () {},
+            child: const Text('Logout'),
+          ),
+          const SizedBox(width: 10),
+          const CircleAvatar(backgroundImage: AssetImage('assets/img1.jpg')),
+          const SizedBox(width: 30),
+        ],
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -45,7 +84,7 @@ class ProfileDisplayPage extends StatelessWidget {
                   // Profile Image Display
                   CircleAvatar(
                     radius: 80,
-                    backgroundImage: _getProfileImage(),
+                    backgroundImage: _getProfileImageStatic(profileImage, webImage),
                     child: (profileImage == null && webImage == null)
                         ? const Icon(
                             Icons.account_circle,
@@ -71,12 +110,12 @@ class ProfileDisplayPage extends StatelessWidget {
     );
   }
 
-  // Helper method to get the correct image for profileImage or webImage.
-  ImageProvider _getProfileImage() {
+  // Static helper method to get the correct image for profileImage or webImage.
+  static ImageProvider _getProfileImageStatic(File? profileImage, Uint8List? webImage) {
     if (webImage != null) {
-      return MemoryImage(webImage!); // Use web image for web platform
+      return MemoryImage(webImage); // Use web image for web platform
     } else if (profileImage != null) {
-      return FileImage(profileImage!); // Use file for non-web platforms
+      return FileImage(profileImage); // Use file for non-web platforms
     } else {
       return const AssetImage('assets/default1.png'); // Default image if no profile image
     }
@@ -120,3 +159,4 @@ class ProfileDisplayPage extends StatelessWidget {
     );
   }
 }
+

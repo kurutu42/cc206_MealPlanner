@@ -1,56 +1,14 @@
 import 'package:cc206_mealplanner/features/homepage.dart';
+import 'package:cc206_mealplanner/features/login.dart';
+import 'package:cc206_mealplanner/features/profiledisplay.dart';
+import 'package:cc206_mealplanner/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:flutter/foundation.dart'; // For kIsWeb
-
-// Import your ProfileDisplay page
-import 'package:cc206_mealplanner/features/profiledisplay.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb 
 
 void main() {
   runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('SmartPlates'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MealPlannerHomePage(userName: '',),
-                  ),
-                );
-              },
-              child: const Text('Home'),
-            ),
-
-            
-             const SizedBox(width: 10),
-            TextButton(onPressed: () {}, child: const Text('Profile')),
-            const SizedBox(width: 10),
-            TextButton(onPressed: () {}, child: const Text('Create Meal')),
-            const SizedBox(width: 10),
-            TextButton(onPressed: () {}, child: const Text('Calendar')),
-            const SizedBox(width: 10),
-            TextButton(onPressed: () {}, child: const Text('Logout')),
-            const SizedBox(width: 10),
-            const CircleAvatar(backgroundImage: AssetImage('assets/img1.jpg')),
-            const SizedBox(width: 30),
-          ],
-        ),
-        body: const ProfilePage(),
-      ),
-    );
-  }
 }
 
 class ProfilePage extends StatefulWidget {
@@ -61,14 +19,14 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final _formKey = GlobalKey<FormState>();
-  String? _name;
-  double? _weight;
-  double? _height;
-  String? _allergies;
-  String? _age;
-  File? _profileImage; // For non-web platforms
-  Uint8List? _webImage; // For web platforms
+  static final _formKey = GlobalKey<FormState>(); // static form key shared across all instances
+  static String? _name; // static name, shared across all instances
+  static double? _weight;
+  static double? _height;
+  static String? _allergies;
+  static String? _age;
+  static File? _profileImage; // Static profile image, shared across all instances
+  static Uint8List? _webImage; // Static web image, shared across all instances
 
   final ImagePicker _picker = ImagePicker();
 
@@ -77,13 +35,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (pickedFile != null) {
       if (kIsWeb) {
-        // For web, use Uint8List
         final webImage = await pickedFile.readAsBytes();
         setState(() {
           _webImage = webImage;
         });
       } else {
-        // For non-web, use File
         setState(() {
           _profileImage = File(pickedFile.path);
         });
@@ -95,20 +51,24 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Navigate to the profile display page
-      Navigator.push(
+      // Navigate to ProfileDisplayPage after saving the profile
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => ProfileDisplayPage(
-            name: _name ?? 'No Name Provided',
+            name: _name ?? '',
             weight: _weight ?? 0.0,
             height: _height ?? 0.0,
-            allergies: _allergies ?? 'No allergies',
-            age: _age ?? 'Not provided',
-            profileImage: _profileImage, // Pass the File for non-web
-            webImage: _webImage, // Pass the Uint8List for Web platforms
+            allergies: _allergies ?? '',
+            age: _age ?? '',
+            profileImage: _profileImage ?? File('assets/default1.png'), // Default profile image
+            webImage: _webImage, // Pass webImage for web platforms
           ),
         ),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
       );
     }
   }
@@ -116,117 +76,140 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background image
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/background1.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          // Content
-          SingleChildScrollView(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 50.0),
-                child: Column(
-                  children: [
-                    // Profile Card
-                    _buildProfileCard(context),
-                  ],
+      appBar: AppBar(
+        title: const Text('SmartPlates'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MealPlannerHomePage(userName: ''),
                 ),
-              ),
+              );
+            },
+            child: const Text(
+              'Home',
+             
             ),
           ),
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              'Profile',
+           
+            ),
+          ),
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              'Create Meal',
+             
+            ),
+          ),
+          const SizedBox(width: 10),
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              'Calendar',
+              
+            ),
+          ),
+          const SizedBox(width: 10),
+          TextButton(
+            onPressed: () {Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(userName: ''),
+                ),
+              );},
+            child: const Text(
+              'Logout',
+              
+              
+            ),
+          ),
+          const SizedBox(width: 10),
+          const CircleAvatar(backgroundImage: AssetImage('assets/img1.jpg')),
+          const SizedBox(width: 30),
         ],
       ),
-    );
-  }
-
-  Widget _buildProfileCard(BuildContext context) {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Smaller padding
-        child: Column(
-          children: [
-            // Profile Image
-            GestureDetector(
-              onTap: _pickImage,
-              child: CircleAvatar(
-                radius: 50, // Smaller avatar size
-                backgroundImage: _getProfileImage(),
-                child: (_profileImage == null && _webImage == null)
-                    ? const Icon(
-                        Icons.add_a_photo,
-                        size: 35, // Smaller icon
-                        color: Colors.white,
-                      )
-                    : null,
-              ),
-            ),
-            const SizedBox(height: 15), // Reduced height
-            // Form Fields
-            Form(
-              key: _formKey,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/background2.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildTextField(
-                    label: "Name",
-                    onSave: (value) => _name = value,
-                    validator: (value) =>
-                        value == null || value.isEmpty ? "Enter your name" : null,
-                  ),
-                  const SizedBox(height: 12), // Reduced space between fields
-                  _buildTextField(
-                    label: "Weight (kg)",
-                    keyboardType: TextInputType.number,
-                    onSave: (value) => _weight = double.tryParse(value!),
-                    validator: (value) =>
-                        value == null || value.isEmpty ? "Enter your weight" : null,
-                  ),
-                  const SizedBox(height: 12), // Reduced space between fields
-                  _buildTextField(
-                    label: "Height (cm)",
-                    keyboardType: TextInputType.number,
-                    onSave: (value) => _height = double.tryParse(value!),
-                    validator: (value) =>
-                        value == null || value.isEmpty ? "Enter your height" : null,
-                  ),
-                  const SizedBox(height: 12), // Reduced space between fields
-                  _buildTextField(
-                    label: "Allergies",
-                    onSave: (value) => _allergies = value,
-                  ),
-                  const SizedBox(height: 12), // Reduced space between fields
-                  _buildTextField(
-                    label: "Age",
-                    keyboardType: TextInputType.number,
-                    onSave: (value) => _age = value,
-                  ),
-                  const SizedBox(height: 20), // Reduced space before button
-                  ElevatedButton(
-                    onPressed: _saveProfile,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25, vertical: 12), // Smaller padding
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                  GestureDetector(
+                    onTap: _pickImage,
+                    child: CircleAvatar(
+                      radius: 80,
+                      backgroundImage: _getProfileImage(),
+                      child: (_profileImage == null && _webImage == null)
+                          ? const Icon(
+                              Icons.add_a_photo,
+                              size: 50,
+                              color: Colors.white,
+                            )
+                          : null,
                     ),
-                    child: const Text(
-                      "Update Profile",
-                      style: TextStyle(fontSize: 16), // Smaller text size
+                  ),
+                  const SizedBox(height: 20),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        _buildInfoBox(
+                          label: "Name",
+                          initialValue: _name,
+                          onSave: (value) => _name = value,
+                          validator: (value) =>
+                              value == null || value.isEmpty ? "Enter your name" : null,
+                        ),
+                        _buildInfoBox(
+                          label: "Weight (kg)",
+                          initialValue: _weight?.toString(),
+                          onSave: (value) => _weight = double.tryParse(value!),
+                          validator: (value) =>
+                              value == null || value.isEmpty ? "Enter your weight" : null,
+                        ),
+                        _buildInfoBox(
+                          label: "Height (cm)",
+                          initialValue: _height?.toString(),
+                          onSave: (value) => _height = double.tryParse(value!),
+                          validator: (value) =>
+                              value == null || value.isEmpty ? "Enter your height" : null,
+                        ),
+                        _buildInfoBox(
+                          label: "Allergies",
+                          initialValue: _allergies,
+                          onSave: (value) => _allergies = value,
+                        ),
+                        _buildInfoBox(
+                          label: "Age",
+                          initialValue: _age,
+                          onSave: (value) => _age = value,
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _saveProfile,
+                          child: const Text("Update Profile"),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -234,32 +217,56 @@ class _ProfilePageState extends State<ProfilePage> {
 
   ImageProvider _getProfileImage() {
     if (kIsWeb && _webImage != null) {
-      return MemoryImage(_webImage!); // Use web image for web platform
+      return MemoryImage(_webImage!);
     } else if (_profileImage != null) {
-      return FileImage(_profileImage!); // Use file for other platforms
+      return FileImage(_profileImage!);
     } else {
-      return const AssetImage('assets/default1.png'); // Default image
+      return const AssetImage('assets/default1.png');
     }
   }
 
-  Widget _buildTextField({
+  Widget _buildInfoBox({
     required String label,
-    TextInputType keyboardType = TextInputType.text,
+    required String? initialValue,
     required void Function(String?) onSave,
     String? Function(String?)? validator,
   }) {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        filled: true,
-        fillColor: Colors.grey[100]?.withOpacity(0.9),
+    return Container(
+      width: 450,
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(10.0),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 4.0,
+            offset: Offset(2, 2),
+          ),
+        ],
       ),
-      keyboardType: keyboardType,
-      onSaved: onSave,
-      validator: validator,
+      child: Row(
+        children: [
+          Text(
+            "$label: ",
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          Expanded(
+            child: TextFormField(
+              initialValue: initialValue,
+              decoration: const InputDecoration(border: InputBorder.none),
+              onSaved: onSave,
+              validator: validator,
+              style: const TextStyle(fontSize: 16, color: Colors.black),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
