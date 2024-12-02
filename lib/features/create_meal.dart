@@ -4,10 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart'; // Import the intl package for date formatting
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,9 +18,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 184, 255, 175),
       ),
-      home: MealPlanner(),
+      home: const MealPlanner(),
       routes: {
-        '/create_meal': (context) => MealPlanner(),
+        '/create_meal': (context) => const MealPlanner(),
         '/calendar': (context) => EventCalendarScreen(),
       },
     );
@@ -26,42 +28,46 @@ class MyApp extends StatelessWidget {
 }
 
 class MealPlanner extends StatefulWidget {
+  const MealPlanner({super.key});
+
   @override
   _MealPlannerState createState() => _MealPlannerState();
 }
 
 class _MealPlannerState extends State<MealPlanner> {
-  final List<Map<String, String>> breakfastItems = [];
-  final List<Map<String, String>> lunchItems = [];
-  final List<Map<String, String>> dinnerItems = [];
+  static final List<Map<String, String>> breakfastItems = [];
+  static final List<Map<String, String>> lunchItems = [];
+  static final List<Map<String, String>> dinnerItems = [];
 
-  final TextEditingController _dishController = TextEditingController();
+  static final TextEditingController _dishController = TextEditingController();
   String _selectedMealType = 'Main';
   String _selectedMeal = 'Breakfast';
 
   void _addDish(String dishName, String dishType) {
-    if (dishName.trim().isEmpty) {
-      _showErrorDialog('Please enter a dish name');
-      return;
-    }
-
-    if (_isDishLimitReached()) {
-      _showErrorDialog(
-          'The limit of 10 dishes has been reached for $_selectedMeal');
-      return;
-    }
-
-    setState(() {
-      if (_selectedMeal == 'Breakfast') {
-        breakfastItems.add({'name': dishName, 'type': dishType});
-      } else if (_selectedMeal == 'Lunch') {
-        lunchItems.add({'name': dishName, 'type': dishType});
-      } else if (_selectedMeal == 'Dinner') {
-        dinnerItems.add({'name': dishName, 'type': dishType});
-      }
-    });
-    _dishController.clear();
+  if (dishName.trim().isEmpty) {
+    _showErrorDialog('Please enter a dish name');
+    return;
   }
+
+  if (_isDishLimitReached()) {
+    _showErrorDialog(
+        'The limit of 10 dishes has been reached for $_selectedMeal');
+    return;
+  }
+
+  setState(() {
+    if (_selectedMeal == 'Breakfast') {
+      breakfastItems.add({'name': dishName, 'type': dishType});
+    } else if (_selectedMeal == 'Lunch') {
+      lunchItems.add({'name': dishName, 'type': dishType});
+    } else if (_selectedMeal == 'Dinner') {
+      dinnerItems.add({'name': dishName, 'type': dishType});
+    }
+  });
+
+  _dishController.clear();
+}
+
 
   bool _isDishLimitReached() {
     if (_selectedMeal == 'Breakfast' && breakfastItems.length >= 10) {
@@ -78,11 +84,11 @@ class _MealPlannerState extends State<MealPlanner> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Error'),
+        title: const Text('Error'),
         content: Text(message),
         actions: <Widget>[
           TextButton(
-            child: Text('Okay'),
+            child: const Text('Okay'),
             onPressed: () {
               Navigator.of(ctx).pop();
             },
@@ -98,26 +104,27 @@ class _MealPlannerState extends State<MealPlanner> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Meal'),
+        title: const Text('Create Meal'),
         actions: [
-          TextButton(onPressed: () {}, child: Text('Home')),
-          SizedBox(width: 10),
-          TextButton(onPressed: () {}, child: Text('Profile')),
-          SizedBox(width: 10),
-          TextButton(onPressed: () {}, child: Text('Create Meal')),
-          SizedBox(width: 10),
+          TextButton(onPressed: () {}, child: const Text('Home')),
+          const SizedBox(width: 10),
+          TextButton(onPressed: () {}, child: const Text('Profile')),
+          const SizedBox(width: 10),
+          TextButton(onPressed: () {}, child: const Text('Create Meal')),
+          const SizedBox(width: 10),
           TextButton(
             onPressed: () {
               Navigator.pushNamed(context,
                   '/calendar'); // Navigate to the Event Calendar screen
             },
-            child: Text('Calendar'),
+            child: const Text('Calendar'),
           ),
-          SizedBox(width: 10),
-          TextButton(onPressed: () {}, child: Text('Logout')),
-          SizedBox(width: 10),
-          CircleAvatar(backgroundImage: AssetImage('lib/assets/img1.jpg')),
-          SizedBox(width: 30),
+          const SizedBox(width: 10),
+          TextButton(onPressed: () {}, child: const Text('Logout')),
+          const SizedBox(width: 10),
+          const CircleAvatar(
+              backgroundImage: AssetImage('lib/assets/img1.jpg')),
+          const SizedBox(width: 30),
         ],
       ),
       body: Stack(
@@ -147,7 +154,7 @@ class _MealPlannerState extends State<MealPlanner> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 2,
                     blurRadius: 5,
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
@@ -160,13 +167,13 @@ class _MealPlannerState extends State<MealPlanner> {
                     alignment: Alignment.center,
                     child: Text(
                       formattedDate,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold, // Make the date bold
                         fontSize: 18,
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Container for the "Breakfast, Lunch, Dinner" buttons
                   Container(
                     height: 50, // Adjust this height as needed
@@ -180,7 +187,7 @@ class _MealPlannerState extends State<MealPlanner> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Dish list container
                   Expanded(
                     child: Container(
@@ -193,7 +200,7 @@ class _MealPlannerState extends State<MealPlanner> {
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3),
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
@@ -203,7 +210,7 @@ class _MealPlannerState extends State<MealPlanner> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             // Center the "Dishes" title
-                            Text(
+                            const Text(
                               'Dishes',
                               style: TextStyle(
                                 fontSize: 18,
@@ -212,10 +219,10 @@ class _MealPlannerState extends State<MealPlanner> {
                               textAlign:
                                   TextAlign.center, // Center-align the text
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             if (_getCurrentMealItems().isEmpty)
                               // Center the "There is no menu" message
-                              Text(
+                              const Text(
                                 'There is no menu',
                                 style:
                                     TextStyle(fontSize: 16, color: Colors.grey),
@@ -230,15 +237,15 @@ class _MealPlannerState extends State<MealPlanner> {
                                         _getCurrentMealItems())[index];
                                   },
                                   physics:
-                                      AlwaysScrollableScrollPhysics(), // Make the list scrollable
+                                      const AlwaysScrollableScrollPhysics(), // Make the list scrollable
                                 ),
-                              ),
+                              )
                           ],
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   // Add dish controls
                   Container(
                     padding: const EdgeInsets.all(8.0),
@@ -250,7 +257,7 @@ class _MealPlannerState extends State<MealPlanner> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -283,7 +290,7 @@ class _MealPlannerState extends State<MealPlanner> {
                             Expanded(
                               child: TextField(
                                 controller: _dishController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Dish name',
                                   border: OutlineInputBorder(),
                                 ),
@@ -293,13 +300,13 @@ class _MealPlannerState extends State<MealPlanner> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             ElevatedButton(
                               onPressed: () {
                                 _addDish(
                                     _dishController.text, _selectedMealType);
                               },
-                              child: Text('Add'),
+                              child: const Text('Add'),
                             ),
                           ],
                         ),
@@ -328,19 +335,19 @@ class _MealPlannerState extends State<MealPlanner> {
   List<Widget> _buildMealItems(List<Map<String, String>> mealItems) {
     return mealItems.map((dish) {
       return ListTile(
-        leading: Icon(
+        leading: const Icon(
           Icons.food_bank,
           size: 30, // Adjust the size of the icon to match the text size
         ),
         title: Text(
           dish['name']!,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold, // Make the dish name bold
           ),
         ),
         subtitle: Text(dish['type']!),
         trailing: IconButton(
-          icon: Icon(Icons.delete),
+          icon: const Icon(Icons.delete),
           onPressed: () {
             setState(() {
               mealItems.remove(dish);
