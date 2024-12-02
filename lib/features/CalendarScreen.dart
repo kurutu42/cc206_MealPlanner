@@ -70,14 +70,29 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meal Plan Calendar'),
-        backgroundColor: Colors.red[300],
-        centerTitle: true,
+        backgroundColor: Colors.white30,
         actions: [
-          TextButton(onPressed: () {}, child: const Text('Home')),
+          TextButton(
+              onPressed: () {},
+              child: const Text(
+                'Home',
+                style: TextStyle(color: Colors.green),
+              )),
           const SizedBox(width: 10),
-          TextButton(onPressed: () {}, child: const Text('Profile')),
+          TextButton(
+              onPressed: () {},
+              child: const Text(
+                'Profile',
+                style: TextStyle(color: Colors.green),
+              )),
           const SizedBox(width: 10),
-          TextButton(onPressed: () {}, child: const Text('Create Meal')),
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              'Create Meal',
+              style: TextStyle(color: Colors.green),
+            ),
+          ),
           const SizedBox(width: 10),
           TextButton(
             onPressed: () {
@@ -87,7 +102,10 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     builder: (context) => const EventCalendarScreen()),
               );
             },
-            child: const Text('Calendar'),
+            child: const Text(
+              'Calendar',
+              style: TextStyle(color: Colors.green),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -96,7 +114,10 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
-            child: const Text('Logout'),
+            child: const Text(
+              'Logout',
+              style: TextStyle(color: Colors.green),
+            ),
           ),
           const CircleAvatar(backgroundImage: AssetImage('assets/img1.jpg')),
           const SizedBox(width: 30),
@@ -150,7 +171,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                     shape: BoxShape.circle,
                   ),
                   selectedDecoration: BoxDecoration(
-                    color: Colors.red[300],
+                    color: Colors.green[300],
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -173,7 +194,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToMealPlanner,
         child: const Icon(Icons.add),
-        backgroundColor: Colors.red[200],
+        backgroundColor: Colors.green[200],
       ),
     );
   }
@@ -214,7 +235,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.red[300],
+                color: Colors.green[300],
               ),
             ),
           ],
