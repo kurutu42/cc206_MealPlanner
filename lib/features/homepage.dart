@@ -1,4 +1,12 @@
+import 'package:cc206_mealplanner/features/calendar.dart';
+import 'package:cc206_mealplanner/features/create_meal.dart';
+import 'package:cc206_mealplanner/features/login.dart';
 import 'package:flutter/material.dart';
+import 'package:cc206_mealplanner/features/profile.dart';
+
+void main() {
+  runApp(const CreateMealApp());
+}
 
 class MealPlannerHomePage extends StatefulWidget {
   final String userName;
@@ -37,15 +45,60 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Meal Planner',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 211, 244, 212),
+        title: const Text('SmartPlates'),
+        actions: [
+        
+          TextButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        // ignore: prefer_const_constructors
+        builder: (context) => MealPlannerHomePage(userName: ""), // Pass the required userName
+      ),
+    );
+  },
+  child: const Text('Home'),
+),
+
+          TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfilePage(userName: '',),
+                  ),
+                );
+              },
+              child: const Text('Profile'),
+            ),
+          TextButton(onPressed: () {Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MealPlanner(userName: '',),
+                ),
+              );}, child: const Text('Create Meal')),
+          const SizedBox(width: 10),
+          TextButton(onPressed: () {Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EventCalendarScreen(userName: '',),
+                ),
+              );}, child: const Text('Calendar')),
+          const SizedBox(width: 10),
+          TextButton(onPressed: () {
+            Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginPage(userName: '',),
+                  ),
+                );
+
+          }, child: const Text('Logout')),
+          const SizedBox(width: 10),
+          const CircleAvatar(backgroundImage: AssetImage('assets/img1.jpg')),
+          const SizedBox(width: 30),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -1,9 +1,9 @@
-import 'package:cc206_mealplanner/features/signup.dart';
+import 'package:cc206_mealplanner/features/signup.dart'; 
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/homepage.dart';  // Import homepage
+import 'package:cc206_mealplanner/features/homepage.dart';  
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, required String userName});
 
   @override
   LoginPageState createState() => LoginPageState();
@@ -16,30 +16,49 @@ class LoginPageState extends State<LoginPage> {
 
   bool _isPasswordVisible = false;
 
+  // Static fixed user credentials
+  static const String fixedUsername = "Kean Janaban";
+  static const String fixedPassword = "123456";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.cyan.shade100,
-                Colors.green.shade500,
-              ],
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/background4.jpg'), // Use the asset image
+              fit: BoxFit.cover, // Make sure the image covers the entire screen
             ),
           ),
           margin: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _header(),
-              _inputField(),
-              _signup(context),
-            ],
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.8), // Light background to improve readability
+                borderRadius: BorderRadius.circular(20), // Rounded corners for the container
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(0, 4),
+                    blurRadius: 8,
+                  ),
+                ], // Adds shadow to the container
+              ),
+              width: double.infinity,
+              constraints: const BoxConstraints(maxWidth: 400, maxHeight: 550), // Limit width for aesthetic layout
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _header(),
+                  _inputField(),
+                  _signup(context),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -47,21 +66,30 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Widget _header() {
-    return Column(
-      children: const [
-        Text(
-          "Welcome Back",
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-        ),
-        Text("Enter your credentials to login"),
-      ],
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Welcome Back",
+            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.green),
+          ),
+          SizedBox(height: 5.0),
+          Text(
+            "Enter your credentials to login",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.green),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _inputField() {
     return Center(
       child: Container(
-        width: 300,
+        width: double.infinity,
         child: Form(
           key: _formKey,
           child: Column(
@@ -113,17 +141,25 @@ class LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Show success message
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Login successful!")),
-                    );
-                    // Navigate to MealPlannerHomePage after successful login
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MealPlannerHomePage(userName: _usernameController.text),
-                      ),
-                    );
+                    // Validate static credentials
+                    if (_usernameController.text == LoginPageState.fixedUsername &&
+                        _passwordController.text == LoginPageState.fixedPassword) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Login successful!")),
+                      );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MealPlannerHomePage(
+                              userName: _usernameController.text),
+                        ),
+                      );
+                    } else {
+                      // Show error message if credentials are incorrect
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Invalid username or password")),
+                      );
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -147,7 +183,7 @@ class LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Don't have an account? "),
+        const Text("Don't have an account? ", style: TextStyle(color: Colors.green)),
         TextButton(
           onPressed: () {
             Navigator.push(
@@ -164,3 +200,4 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 }
+

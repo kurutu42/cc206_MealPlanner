@@ -1,5 +1,9 @@
+
+import 'package:cc206_mealplanner/features/homepage.dart';
+import 'package:cc206_mealplanner/features/login.dart';
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/login.dart';  
+ 
+ 
 
 void main() {
   runApp(const MyApp());
@@ -13,10 +17,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Meal Planner App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const LoginPage(), // Set LoginPage as the starting screen
+      home: const LoginPage(userName: '',), // Set LoginPage as the starting screen
+      // Define the routes here
+      routes: {
+        '/homepage': (context) => const MealPlannerHomePage(userName: 'John Doe',), 
+        '/about': (context) => const LoginPage(userName: '',), 
+        
+        
+      }
     );
   }
 }

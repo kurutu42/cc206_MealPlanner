@@ -1,4 +1,4 @@
-# cc206_mealplanner
+# create_meal
 
 A new Flutter project.
 

@@ -15,7 +15,6 @@ class SignupPageState extends State<SignupPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isPasswordVisible = false;
-  bool _isImageOneDisplayed = true;
 
   @override
   Widget build(BuildContext context) {
@@ -23,47 +22,72 @@ class SignupPageState extends State<SignupPage> {
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.cyan.shade100,
-                Colors.green.shade500,
-              ],
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/background1.png'), // Use the asset image
+              fit: BoxFit.cover, // Make sure the image covers the entire screen
             ),
           ),
           margin: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _header(),
-              _inputField(),
-              _toggleImageButton(),
-              _login(context),
-            ],
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.8), // Light background to improve readability
+                borderRadius: BorderRadius.circular(20), // Rounded corners for the container
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(0, 4),
+                    blurRadius: 8,
+                  ),
+                ], // Adds shadow to the container
+              ),
+              width: double.infinity,
+              constraints: const BoxConstraints(maxWidth: 400, maxHeight: 550), // Limit width for aesthetic layout
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _header(),
+                  _inputField(),
+                  _login(context),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _header() {
-    return const Column(
-      children: [
-        Text(
-          "Create Account",
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-        ),
-        Text("Enter your credentials to sign up"),
-      ],
-    );
-  }
+ Widget _header() {
+  return const Padding(
+    padding: EdgeInsets.symmetric(vertical: 45.0), // Adjust the vertical padding as needed
+    child: Align(
+      alignment: Alignment.topCenter, // Aligns the content to the top center
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center, // Center the text horizontally
+        children: [
+          Text(
+            "Create Account",
+            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.green),
+          ),
+          SizedBox(height: 5.0), // Adjust the height as needed for spacing
+          Text(
+            "Enter your credentials to Sign Up",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.green),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   Widget _inputField() {
     return Center(
       child: Container(
-        width: 300,
+        width: double.infinity,
         child: Form(
           key: _formKey,
           child: Column(
@@ -77,7 +101,7 @@ class SignupPageState extends State<SignupPage> {
                     borderRadius: BorderRadius.circular(18),
                     borderSide: BorderSide.none,
                   ),
-                  fillColor: Colors.white24.withOpacity(0.1),
+                  fillColor: Colors.white.withOpacity(0.7),
                   filled: true,
                   prefixIcon: const Icon(Icons.person),
                 ),
@@ -93,7 +117,7 @@ class SignupPageState extends State<SignupPage> {
                     borderRadius: BorderRadius.circular(18),
                     borderSide: BorderSide.none,
                   ),
-                  fillColor: Colors.white.withOpacity(0.1),
+                  fillColor: Colors.white.withOpacity(0.7),
                   filled: true,
                   prefixIcon: const Icon(Icons.email),
                 ),
@@ -116,7 +140,7 @@ class SignupPageState extends State<SignupPage> {
                     borderRadius: BorderRadius.circular(18),
                     borderSide: BorderSide.none,
                   ),
-                  fillColor: Colors.white.withOpacity(0.1),
+                  fillColor: Colors.white.withOpacity(0.7),
                   filled: true,
                   prefixIcon: const Icon(Icons.password),
                   suffixIcon: IconButton(
@@ -143,7 +167,7 @@ class SignupPageState extends State<SignupPage> {
                     );
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                      MaterialPageRoute(builder: (context) => const LoginPage(userName: '',)),
                     );
                   }
                 },
@@ -164,31 +188,16 @@ class SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _toggleImageButton() {
-    return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          _isImageOneDisplayed = !_isImageOneDisplayed;
-        });
-      },
-      child: const Text("Toggle Image"),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.orangeAccent,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      ),
-    );
-  }
-
   Widget _login(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Already have an account? "),
+        const Text("Already have an account? ", style: TextStyle(color: Colors.green)),
         TextButton(
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
+              MaterialPageRoute(builder: (context) => const LoginPage(userName: '',)),
             );
           },
           child: const Text(
