@@ -1,6 +1,6 @@
-import 'package:cc206_mealplanner/features/signup.dart'; // Make sure this import is correct
+import 'package:cc206_mealplanner/features/signup.dart'; 
 import 'package:flutter/material.dart';
-import 'package:cc206_mealplanner/features/homepage.dart';  // Make sure this import is correct
+import 'package:cc206_mealplanner/features/homepage.dart';  
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required String userName});
