@@ -1,4 +1,7 @@
 import 'package:cc206_mealplanner/features/create_meal.dart';
+import 'package:cc206_mealplanner/features/homepage.dart';
+import 'package:cc206_mealplanner/features/login.dart';
+import 'package:cc206_mealplanner/features/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -17,9 +20,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 184, 255, 175),
       ),
-      home: const EventCalendarScreen(),
+      home: const EventCalendarScreen(userName: '',),
       routes: {
-        '/calendar': (context) => const EventCalendarScreen(),
+        '/calendar': (context) => const EventCalendarScreen(userName: '',),
       },
     );
   }
@@ -34,7 +37,7 @@ class Event {
 }
 
 class EventCalendarScreen extends StatefulWidget {
-  const EventCalendarScreen({super.key});
+  const EventCalendarScreen({super.key, required String userName});
 
   @override
   _EventCalendarScreenState createState() => _EventCalendarScreenState();
@@ -313,15 +316,40 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       appBar: AppBar(
         title: const Text('Meal Calendar'),
         actions: [
-          TextButton(onPressed: () {}, child: const Text('Home')),
-          const SizedBox(width: 10),
-          TextButton(onPressed: () {}, child: const Text('Profile')),
+         TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MealPlannerHomePage(userName: ''),
+                ),
+              );
+            },
+            child: const Text(
+              'Home',
+             
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProfilePage(userName: ''),
+                ),
+              );
+            },
+            child: const Text(
+              'Profile',
+             
+            ),
+          ),
           const SizedBox(width: 10),
           TextButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MealPlanner()),
+                MaterialPageRoute(builder: (context) => const MealPlanner(userName: '',)),
               ).then((result) {
                 if (result != null) {
                   final mealType = result['mealType'];
@@ -332,9 +360,32 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
             },
             child: const Text('Create Meal'),
           ),
-          TextButton(onPressed: () {}, child: const Text('Calendar')),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EventCalendarScreen(userName: '',),
+                ),
+              );
+            },
+            child: const Text('Calendar'),
+          ),
           const SizedBox(width: 10),
-          TextButton(onPressed: () {}, child: const Text('Logout')),
+         TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(userName: ''),
+                ),
+              );
+            },
+            child: const Text(
+              'Logout',
+             
+            ),
+          ),
           const SizedBox(width: 10),
           const CircleAvatar(
               backgroundImage: AssetImage('lib/assets/img1.jpg')),
@@ -407,7 +458,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MealPlanner()),
+                              builder: (context) => const MealPlanner(userName: '',)),
                         );
                       },
                       child: const Icon(Icons.add),

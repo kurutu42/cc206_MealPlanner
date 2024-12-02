@@ -1,9 +1,11 @@
-import 'package:cc206_mealplanner/main.dart';
+import 'package:cc206_mealplanner/features/calendar.dart';
+import 'package:cc206_mealplanner/features/create_meal.dart';
+import 'package:cc206_mealplanner/features/login.dart';
 import 'package:flutter/material.dart';
 import 'package:cc206_mealplanner/features/profile.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const CreateMealApp());
 }
 
 class MealPlannerHomePage extends StatefulWidget {
@@ -64,21 +66,31 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ProfilePage(),
+                    builder: (context) => const ProfilePage(userName: '',),
                   ),
                 );
               },
               child: const Text('Profile'),
             ),
-          TextButton(onPressed: () {}, child: const Text('Create Meal')),
+          TextButton(onPressed: () {Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MealPlanner(userName: '',),
+                ),
+              );}, child: const Text('Create Meal')),
           const SizedBox(width: 10),
-          TextButton(onPressed: () {}, child: const Text('Calendar')),
+          TextButton(onPressed: () {Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EventCalendarScreen(userName: '',),
+                ),
+              );}, child: const Text('Calendar')),
           const SizedBox(width: 10),
           TextButton(onPressed: () {
             Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ProfilePage(),
+                    builder: (context) => const LoginPage(userName: '',),
                   ),
                 );
 

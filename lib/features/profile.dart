@@ -1,18 +1,20 @@
+
+import 'package:cc206_mealplanner/features/calendar.dart';
+import 'package:cc206_mealplanner/features/create_meal.dart';
 import 'package:cc206_mealplanner/features/homepage.dart';
 import 'package:cc206_mealplanner/features/login.dart';
 import 'package:cc206_mealplanner/features/profiledisplay.dart';
-import 'package:cc206_mealplanner/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart'; // For kIsWeb 
 
 void main() {
-  runApp(const MyApp());
+  runApp(const CreateMealApp());
 }
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required String userName});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -94,14 +96,28 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Profile',
-           
-            ),
-          ),
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ProfilePage(userName: '',),
+      ),
+    );
+  },
+  child: const Text(
+    'Profile',
+  ),
+),
           TextButton(
-            onPressed: () {},
+            onPressed: () {{Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MealPlanner(userName: ''),
+                ),
+              );
+              };
+              
+              },
             child: const Text(
               'Create Meal',
              
@@ -109,7 +125,12 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const SizedBox(width: 10),
           TextButton(
-            onPressed: () {},
+            onPressed: () {Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EventCalendarScreen(userName: '',),
+                ),
+              );},
             child: const Text(
               'Calendar',
               
