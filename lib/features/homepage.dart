@@ -45,6 +45,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     recipesFuture = fetchRecipes();
   }
 
+  //API
   Future<List<Map<String, dynamic>>> fetchRecipes() async {
     final response = await http.get(
       Uri.parse('https://dummyjson.com/recipes'),
@@ -67,6 +68,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
       appBar: AppBar(
         title: Text('SmartPlates'),
         actions: [
+          //Nav Bar
           TextButton(onPressed: () {}, child: Text('Home')),
           SizedBox(width: 10),
           TextButton(onPressed: () {}, child: Text('Profile')),
@@ -81,6 +83,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
           SizedBox(width: 30),
         ],
       ),
+      //Cover Image
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
@@ -112,6 +115,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                 ),
               ],
             ),
+            //Meal Cards
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
@@ -181,7 +185,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
       ),
     );
   }
-
+//Section Titles
   Widget sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -194,6 +198,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     );
   }
 
+//Meal Cards
   Widget mealCardRow(List<Widget> cards) {
     final ScrollController _cardScrollController = ScrollController();
     return Container(
@@ -237,6 +242,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     );
   }
 
+//Meal Card Recommendation
   Widget recommendationCardRow(List<Widget> cards) {
     final ScrollController _recommendationScrollController =
         ScrollController();
@@ -281,6 +287,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     );
   }
 
+//Meal Cards
   Widget mealCard(String mealType, String mealCategory, String dishName) { 
     return Container( 
       width: 350, 
@@ -306,6 +313,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
    );
   }
 
+//Meal Card Recommendation
   Widget recommendationCard(BuildContext context, Map<String, dynamic> meal) { 
     return Container( 
       width: 350, 
@@ -354,6 +362,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                     style: TextStyle(fontSize: 14, color: Colors.grey[500]), 
                     overflow: TextOverflow.ellipsis, 
                     ), 
+                    //Recommendation Card, View Meal pop-up
                     SizedBox(height: 8),
                      Align( 
                       alignment: Alignment.centerRight, 

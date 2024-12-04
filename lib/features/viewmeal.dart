@@ -11,9 +11,9 @@ class ViewMeal extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
+      //Responsive pop-up
       child: Container(
         width: MediaQuery.of(context).size.width * 0.55,
-        //height: MediaQuery.of(context).size.height * 0.95,  // Make the pop-up responsive
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
@@ -81,7 +81,7 @@ class ViewMeal extends StatelessWidget {
                         SizedBox(height: 16),
                         // Calories and Meal Type
                         Text(
-                          'Calories: ${meal['calories']}',
+                          'Calories: ${meal['caloriesPerServing']}',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Text(
@@ -102,7 +102,7 @@ class ViewMeal extends StatelessWidget {
               Align(
                 alignment: Alignment.topRight,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // Align instructions to the right
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: meal['instructions'].map<Widget>((instruction) {
                     return Text('• $instruction', style: TextStyle(fontSize: 16));
                   }).toList(),
@@ -113,10 +113,6 @@ class ViewMeal extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  //TextButton(
-                   // onPressed: () => Navigator.pop(context),
-                   // child: Text('Close'),
-                 // ),
                   SizedBox(width: 16),
                   ElevatedButton(
                     onPressed: () {
@@ -143,7 +139,7 @@ class ViewMeal extends StatelessWidget {
     );
   }
 
-  // Function to assign colors to tags
+  // Assign colors to tags
   Color _getTagColor(String tag) {
     switch (tag.toLowerCase()) {
       case 'asian':
