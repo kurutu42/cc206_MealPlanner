@@ -174,7 +174,7 @@ packages:
     source: hosted
     version: "2.4.4"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
@@ -554,7 +554,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-<<<<<<< HEAD
   xdg_directories:
     dependency: transitive
     description:
@@ -563,8 +562,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-=======
->>>>>>> homepage
 sdks:
   dart: ">=3.5.4 <4.0.0"
   flutter: ">=3.24.0"

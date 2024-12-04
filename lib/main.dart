@@ -6,6 +6,6 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: MealPlannerHomePage(userName: ""),
+    home: LoginPage(userName: ""),
   ));
 }

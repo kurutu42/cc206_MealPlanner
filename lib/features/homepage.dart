@@ -9,8 +9,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class MealPlannerHomePage extends StatefulWidget {
-   final String userName; // Add userName field
-  const MealPlannerHomePage({Key? key, required this.userName}) : super(key: key); // Add constructor
+   final String userName; 
+  const MealPlannerHomePage({Key? key, required this.userName}) : super(key: key);
 
   @override
   _MealPlannerHomePageState createState() => _MealPlannerHomePageState();
@@ -52,6 +52,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     recipesFuture = fetchRecipes();
   }
 
+  //API
   Future<List<Map<String, dynamic>>> fetchRecipes() async {
     final response = await http.get(
       Uri.parse('https://dummyjson.com/recipes'),
@@ -74,14 +75,13 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
       appBar: AppBar(
         title: const Text('SmartPlates'),
         actions: [
-        
+        //Navigation Bar
           TextButton(
   onPressed: () {
     Navigator.push(
       context,
       MaterialPageRoute(
-        // ignore: prefer_const_constructors
-        builder: (context) => MealPlannerHomePage(userName: ""), // Pass the required userName
+        builder: (context) => MealPlannerHomePage(userName: ""), 
       ),
     );
   },
@@ -127,6 +127,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
           const SizedBox(width: 30),
         ],
       ),
+      //Cover Image
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
@@ -158,6 +159,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                 ),
               ],
             ),
+            //Meal Cards
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
@@ -177,6 +179,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                       (index) => mealCard('Day ${index + 1}',
                           'mealType','mealCategory'))),
                   SizedBox(height: 55),
+                  //Half-Image, Half-Text
                   Row(
                     children: [
                       Expanded(child: Image.asset('assets/img1.jpg')),
@@ -192,6 +195,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                       ),
                     ],
                   ),
+                  //Meal Recommendation using API
                   SizedBox(height: 50),
                   sectionTitle('Meal Recommendations'),
                   FutureBuilder<List<Map<String, dynamic>>>(
@@ -209,6 +213,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                       }
                     },
                   ),
+                  //Footer
                   SizedBox(height: 200),
                   if (_showFooter)
                     Container(
@@ -227,7 +232,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
       ),
     );
   }
-
+  //Section Titles
   Widget sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -239,7 +244,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
       ),
     );
   }
-
+//Meal Cards
   Widget mealCardRow(List<Widget> cards) {
     final ScrollController _cardScrollController = ScrollController();
     return Container(
@@ -283,6 +288,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     );
   }
 
+//Meal Card Recommendation
   Widget recommendationCardRow(List<Widget> cards) {
     final ScrollController _recommendationScrollController =
         ScrollController();
@@ -326,7 +332,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
       ),
     );
   }
-
+//Meal Card
   Widget mealCard(String mealType, String mealCategory, String dishName) { 
     return Container( 
       width: 350, 
@@ -351,7 +357,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
       ), 
    );
   }
-
+// Meal Card Recommendation
   Widget recommendationCard(BuildContext context, Map<String, dynamic> meal) { 
     return Container( 
       width: 350, 
@@ -371,7 +377,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
               height: 200, 
               child: Icon(Icons.broken_image, size: 40), 
               ), 
-              ) 
+            ) 
               : Container( 
                 color: Colors.grey[300], 
                 width: 350, 
@@ -400,6 +406,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                     style: TextStyle(fontSize: 14, color: Colors.grey[500]), 
                     overflow: TextOverflow.ellipsis, 
                     ), 
+                    //Recommendation Card, View Meal Pop-up
                     SizedBox(height: 8),
                      Align( 
                       alignment: Alignment.centerRight, 
