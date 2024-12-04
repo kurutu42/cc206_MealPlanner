@@ -3,42 +3,69 @@ import 'package:cc206_mealplanner/features/create_meal.dart';
 import 'package:cc206_mealplanner/features/login.dart';
 import 'package:flutter/material.dart';
 import 'package:cc206_mealplanner/features/profile.dart';
-
-void main() {
-  runApp(const CreateMealApp());
-}
+import 'package:cc206_mealplanner/features/viewmeal.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MealPlannerHomePage extends StatefulWidget {
-  final String userName;
-
-  const MealPlannerHomePage({super.key, required this.userName});
+   final String userName; // Add userName field
+  const MealPlannerHomePage({Key? key, required this.userName}) : super(key: key); // Add constructor
 
   @override
   _MealPlannerHomePageState createState() => _MealPlannerHomePageState();
 }
 
 class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
-  final Map<String, Map<String, String>> _weeklyMealPlan = {
-    'Monday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
-    'Tuesday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
-    'Wednesday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
-    'Thursday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
-    'Friday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
-    'Saturday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
-    'Sunday': {'Breakfast': '', 'Lunch': '', 'Dinner': ''},
-  };
-
-  final List<String> _images = [
-    'mealPlanner1.png',
-    'mealPlanner2.png'
+  int _currentIndex = 0;
+  final List<String> _coverImages = [
+    'assets/img1.jpg',
+    'assets/img2.jpg',
+    'assets/img3.jpg',
   ];
+  bool _showFooter = false;
+  final ScrollController _scrollController = ScrollController();
+  late Future<List<Map<String, dynamic>>> recipesFuture;
 
-  int _currentImageIndex = 0;
-
-  void _changeImage() {
-    setState(() {
-      _currentImageIndex = (_currentImageIndex + 1) % _images.length;
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(Duration(seconds: 5), (Timer timer) {
+      setState(() {
+        _currentIndex = (_currentIndex + 1) % _coverImages.length;
+      });
     });
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent) {
+        setState(() {
+          _showFooter = true;
+        });
+      } else {
+        setState(() {
+          _showFooter = false;
+        });
+      }
+    });
+
+    recipesFuture = fetchRecipes();
+  }
+
+  Future<List<Map<String, dynamic>>> fetchRecipes() async {
+    final response = await http.get(
+      Uri.parse('https://dummyjson.com/recipes'),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['recipes']
+          .map<Map<String, dynamic>>(
+              (json) => json as Map<String, dynamic>)
+          .toList();
+    } else {
+      throw Exception('Failed to fetch recipes');
+    }
   }
 
   @override
@@ -101,186 +128,300 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Welcome, ${widget.userName}',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green[800],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'This Week\'s Meal Plan',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.green[700],
-                ),
-              ),
-              const SizedBox(height: 10),
-              Center(
-                child: Column(
-                  children: [
-                    Image.asset(
-                      _images[_currentImageIndex],
-                      width: 1500,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: _changeImage,
-                      child: const Text("Change Image"),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 15.0,
-                  mainAxisSpacing: 15.0,
-                  childAspectRatio: 1.5,
-                ),
-                itemCount: 7,
-                itemBuilder: (context, index) {
-                  String day = _getDayOfWeek(index);
-                  return MealCard(
-                    day: day,
-                    mealPlan: _weeklyMealPlan[day]!,
-                    onMealPlanChanged: (newMealPlan) {
-                      setState(() {
-                        _weeklyMealPlan[day] = newMealPlan;
-                      });
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  String _getDayOfWeek(int index) {
-    const days = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ];
-    return days[index];
-  }
-}
-
-class MealCard extends StatefulWidget {
-  final String day;
-  final Map<String, String> mealPlan;
-  final ValueChanged<Map<String, String>> onMealPlanChanged;
-
-  const MealCard({
-    super.key,
-    required this.day,
-    required this.mealPlan,
-    required this.onMealPlanChanged,
-  });
-
-  @override
-  _MealCardState createState() => _MealCardState();
-}
-
-class _MealCardState extends State<MealCard> {
-  late TextEditingController _breakfastController;
-  late TextEditingController _lunchController;
-  late TextEditingController _dinnerController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _breakfastController =
-        TextEditingController(text: widget.mealPlan['Breakfast']);
-    _lunchController = TextEditingController(text: widget.mealPlan['Lunch']);
-    _dinnerController = TextEditingController(text: widget.mealPlan['Dinner']);
-  }
-
-  @override
-  void dispose() {
-    _breakfastController.dispose();
-    _lunchController.dispose();
-    _dinnerController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        controller: _scrollController,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              widget.day,
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: Colors.green[800],
+            Stack(
+              children: [
+                Image.asset(
+                  _coverImages[_currentIndex],
+                  width: double.infinity,
+                  height: 400,
+                  fit: BoxFit.cover,
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 400,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+                Positioned.fill(
+                  child: Center(
+                    child: Text(
+                      'MEAL PLANNER',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 52,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  sectionTitle('Meals for the Day'),
+                  mealCardRow([
+                    mealCard('Breakfast', 'Main', 'Pancakes with strawberries'),
+                    mealCard('Lunch', 'Staple', 'Burger'),
+                    mealCard('Dinner', 'Main', 'Grilled Fish'),
+                    mealCard('Dinner', 'Other', 'Cake'),
+                  ]),
+                  SizedBox(height: 40),
+                  sectionTitle('Meals for the Week'),
+                  mealCardRow(List.generate(
+                      7,
+                      (index) => mealCard('Day ${index + 1}',
+                          'mealType','mealCategory'))),
+                  SizedBox(height: 55),
+                  Row(
+                    children: [
+                      Expanded(child: Image.asset('assets/img1.jpg')),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Text(
+                            'A good meal is not just food, it’s an experience.',
+                            style: TextStyle(
+                                fontSize: 50, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 50),
+                  sectionTitle('Meal Recommendations'),
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                    future: recipesFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                            child: Text('Failed to load recommendations'));
+                      } else {
+                        return recommendationCardRow(snapshot.data!
+                            .map((meal) => recommendationCard(context, meal))
+                            .toList());
+                      }
+                    },
+                  ),
+                  SizedBox(height: 200),
+                  if (_showFooter)
+                    Container(
+                      color: Colors.grey[200],
+                      height: 100,
+                      child: Center(
+                        child: Text(
+                            '2024 SmartPlates. Artaba, Casamorin, Del Rio, Fadrigo, Janaban.'),
+                      ),
+                    ),
+                ],
               ),
             ),
-            const SizedBox(height: 25),
-            _buildMealInput(context, 'Breakfast', _breakfastController),
-            const SizedBox(height: 25),
-            _buildMealInput(context, 'Lunch', _lunchController),
-            const SizedBox(height: 25),
-            _buildMealInput(context, 'Dinner', _dinnerController),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMealInput(
-      BuildContext context, String mealType, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          mealType,
-          style: TextStyle(fontSize: 18, color: Colors.green[700]),
+  Widget sectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
-        TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            hintText: 'Enter $mealType',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.green[700]!),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-          ),
-          onChanged: (value) {
-            widget.mealPlan[mealType] = value;
-            widget.onMealPlanChanged(widget.mealPlan);
-          },
-        ),
-      ],
+      ),
     );
   }
+
+  Widget mealCardRow(List<Widget> cards) {
+    final ScrollController _cardScrollController = ScrollController();
+    return Container(
+      height: 350,
+      child: Center(
+        child: Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                _cardScrollController.animateTo(
+                  _cardScrollController.offset - 500,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
+            ),
+            Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                controller: _cardScrollController,
+                itemCount: cards.length,
+                itemBuilder: (context, index) {
+                  return cards[index];
+                },
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.arrow_forward),
+              onPressed: () {
+                _cardScrollController.animateTo(
+                  _cardScrollController.offset + 500,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget recommendationCardRow(List<Widget> cards) {
+    final ScrollController _recommendationScrollController =
+        ScrollController();
+    return Container(
+      height: 350,
+      child: Center(
+        child: Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                _recommendationScrollController.animateTo(
+                  _recommendationScrollController.offset - 500,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
+            ),
+            Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                controller: _recommendationScrollController,
+                itemCount: cards.length,
+                itemBuilder: (context, index) {
+                  return cards[index];
+                },
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.arrow_forward),
+              onPressed: () {
+                _recommendationScrollController.animateTo(
+                  _recommendationScrollController.offset + 500,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget mealCard(String mealType, String mealCategory, String dishName) { 
+    return Container( 
+      width: 350, 
+      child: Card( 
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8), 
+        child: Padding( 
+          padding: const EdgeInsets.all(8.0), 
+          child: Column( 
+            crossAxisAlignment: CrossAxisAlignment.start, 
+            children: [ 
+              Text( 
+                mealType, 
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), 
+                ), 
+                Text(mealCategory, overflow: TextOverflow.ellipsis), 
+                Text(dishName, overflow: TextOverflow.ellipsis), 
+                Align( alignment: Alignment.centerRight, 
+                ), 
+              ], 
+            ),
+        ), 
+      ), 
+   );
+  }
+
+  Widget recommendationCard(BuildContext context, Map<String, dynamic> meal) { 
+    return Container( 
+      width: 350, 
+      child: Card( 
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8), 
+        child: Column( crossAxisAlignment: CrossAxisAlignment.center, 
+        children: [
+           meal['image'] != null 
+           ? Image.network( 
+            meal['image'], 
+            width: 350, 
+            height: 200, 
+            fit: BoxFit.cover, 
+            errorBuilder: (context, error, stackTrace) => Container( 
+              color: Colors.grey[300], 
+              width: 350, 
+              height: 200, 
+              child: Icon(Icons.broken_image, size: 40), 
+              ), 
+              ) 
+              : Container( 
+                color: Colors.grey[300], 
+                width: 350, 
+                height: 200, 
+                child: Icon(Icons.fastfood, size: 40), 
+                ), 
+          Padding( 
+            padding: const EdgeInsets.all(8.0), 
+            child: Column( 
+              crossAxisAlignment: CrossAxisAlignment.start, 
+              children: [ 
+                Text( 
+                  meal['name'] ?? 'Unknown Meal', 
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), 
+                  maxLines: 1, 
+                  overflow: TextOverflow.ellipsis, 
+                  ), 
+                  SizedBox(height: 4),
+                  
+                   Text( meal['cuisine'] ?? 'Cuisine: Not Specified', 
+                   overflow: TextOverflow.ellipsis, 
+                   style: TextStyle(color: Colors.grey[700]), 
+                   ), 
+                   SizedBox(height: 4),
+                    Text( 'Tags: ${meal['tags']?.join(", ") ?? "None"}', 
+                    style: TextStyle(fontSize: 14, color: Colors.grey[500]), 
+                    overflow: TextOverflow.ellipsis, 
+                    ), 
+                    SizedBox(height: 8),
+                     Align( 
+                      alignment: Alignment.centerRight, 
+                      child: ElevatedButton( 
+                        onPressed: () { 
+                          showDialog( context: context, 
+                          builder: (BuildContext context) { 
+                            return ViewMeal(meal: meal); 
+                            }, 
+                          ); 
+                        }, 
+                        child: Text('View Meal'), 
+                      ), 
+                    ), 
+                  ], 
+                ), 
+              ), 
+            ], 
+          ), 
+        ), 
+    );                        
+  }
+
+
 }
