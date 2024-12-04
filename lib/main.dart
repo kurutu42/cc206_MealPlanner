@@ -3,6 +3,6 @@ import 'package:cc206_mealplanner/features/homepage.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: MealPlannerHomePage(userName: 'John Doe'),
+    home: MealPlannerHomePage(),
   ));
 }
