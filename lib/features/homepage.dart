@@ -10,7 +10,7 @@ import 'dart:convert';
 
 class MealPlannerHomePage extends StatefulWidget {
    final String userName; 
-  const MealPlannerHomePage({Key? key, required this.userName}) : super(key: key);
+  const MealPlannerHomePage({super.key, required this.userName});
 
   @override
   _MealPlannerHomePageState createState() => _MealPlannerHomePageState();
@@ -30,7 +30,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(seconds: 5), (Timer timer) {
+    Timer.periodic(const Duration(seconds: 5), (Timer timer) {
       setState(() {
         _currentIndex = (_currentIndex + 1) % _coverImages.length;
       });
@@ -81,7 +81,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MealPlannerHomePage(userName: ""), 
+        builder: (context) => const MealPlannerHomePage(userName: ""), 
       ),
     );
   },
@@ -145,7 +145,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                   height: 400,
                   color: Colors.black.withOpacity(0.5),
                 ),
-                Positioned.fill(
+                const Positioned.fill(
                   child: Center(
                     child: Text(
                       'MEAL PLANNER',
@@ -172,20 +172,20 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                     mealCard('Dinner', 'Main', 'Grilled Fish'),
                     mealCard('Dinner', 'Other', 'Cake'),
                   ]),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   sectionTitle('Meals for the Week'),
                   mealCardRow(List.generate(
                       7,
                       (index) => mealCard('Day ${index + 1}',
                           'mealType','mealCategory'))),
-                  SizedBox(height: 55),
+                  const SizedBox(height: 55),
                   //Half-Image, Half-Text
                   Row(
                     children: [
                       Expanded(child: Image.asset('assets/img1.jpg')),
-                      Expanded(
+                      const Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(24.0),
+                          padding: EdgeInsets.all(24.0),
                           child: Text(
                             'A good meal is not just food, it’s an experience.',
                             style: TextStyle(
@@ -196,15 +196,15 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                     ],
                   ),
                   //Meal Recommendation using API
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   sectionTitle('Meal Recommendations'),
                   FutureBuilder<List<Map<String, dynamic>>>(
                     future: recipesFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        return Center(
+                        return const Center(
                             child: Text('Failed to load recommendations'));
                       } else {
                         return recommendationCardRow(snapshot.data!
@@ -214,12 +214,12 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                     },
                   ),
                   //Footer
-                  SizedBox(height: 200),
+                  const SizedBox(height: 200),
                   if (_showFooter)
                     Container(
                       color: Colors.grey[200],
                       height: 100,
-                      child: Center(
+                      child: const Center(
                         child: Text(
                             '2024 SmartPlates. Artaba, Casamorin, Del Rio, Fadrigo, Janaban.'),
                       ),
@@ -239,7 +239,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
       child: Center(
         child: Text(
           title,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -253,11 +253,11 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
         child: Row(
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 _cardScrollController.animateTo(
                   _cardScrollController.offset - 500,
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
                 );
               },
@@ -273,11 +273,11 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.arrow_forward),
+              icon: const Icon(Icons.arrow_forward),
               onPressed: () {
                 _cardScrollController.animateTo(
                   _cardScrollController.offset + 500,
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
                 );
               },
@@ -298,11 +298,11 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
         child: Row(
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 _recommendationScrollController.animateTo(
                   _recommendationScrollController.offset - 500,
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
                 );
               },
@@ -318,11 +318,11 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.arrow_forward),
+              icon: const Icon(Icons.arrow_forward),
               onPressed: () {
                 _recommendationScrollController.animateTo(
                   _recommendationScrollController.offset + 500,
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
                 );
               },
@@ -337,7 +337,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     return Container( 
       width: 350, 
       child: Card( 
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8), 
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8), 
         child: Padding( 
           padding: const EdgeInsets.all(8.0), 
           child: Column( 
@@ -345,11 +345,11 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
             children: [ 
               Text( 
                 mealType, 
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), 
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold), 
                 ), 
                 Text(mealCategory, overflow: TextOverflow.ellipsis), 
                 Text(dishName, overflow: TextOverflow.ellipsis), 
-                Align( alignment: Alignment.centerRight, 
+                const Align( alignment: Alignment.centerRight, 
                 ), 
               ], 
             ),
@@ -362,7 +362,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
     return Container( 
       width: 350, 
       child: Card( 
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8), 
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8), 
         child: Column( crossAxisAlignment: CrossAxisAlignment.center, 
         children: [
            meal['image'] != null 
@@ -375,14 +375,14 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
               color: Colors.grey[300], 
               width: 350, 
               height: 200, 
-              child: Icon(Icons.broken_image, size: 40), 
+              child: const Icon(Icons.broken_image, size: 40), 
               ), 
             ) 
               : Container( 
                 color: Colors.grey[300], 
                 width: 350, 
                 height: 200, 
-                child: Icon(Icons.fastfood, size: 40), 
+                child: const Icon(Icons.fastfood, size: 40), 
                 ), 
           Padding( 
             padding: const EdgeInsets.all(8.0), 
@@ -391,23 +391,23 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
               children: [ 
                 Text( 
                   meal['name'] ?? 'Unknown Meal', 
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), 
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold), 
                   maxLines: 1, 
                   overflow: TextOverflow.ellipsis, 
                   ), 
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   
                    Text( meal['cuisine'] ?? 'Cuisine: Not Specified', 
                    overflow: TextOverflow.ellipsis, 
                    style: TextStyle(color: Colors.grey[700]), 
                    ), 
-                   SizedBox(height: 4),
+                   const SizedBox(height: 4),
                     Text( 'Tags: ${meal['tags']?.join(", ") ?? "None"}', 
                     style: TextStyle(fontSize: 14, color: Colors.grey[500]), 
                     overflow: TextOverflow.ellipsis, 
                     ), 
                     //Recommendation Card, View Meal Pop-up
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                      Align( 
                       alignment: Alignment.centerRight, 
                       child: ElevatedButton( 
@@ -418,7 +418,7 @@ class _MealPlannerHomePageState extends State<MealPlannerHomePage> {
                             }, 
                           ); 
                         }, 
-                        child: Text('View Meal'), 
+                        child: const Text('View Meal'), 
                       ), 
                     ), 
                   ], 

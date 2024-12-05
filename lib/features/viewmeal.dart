@@ -23,7 +23,7 @@ class ViewMeal extends StatelessWidget {
               Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
@@ -40,7 +40,7 @@ class ViewMeal extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   // Right side: Details
                   Expanded(
                     child: Column(
@@ -49,9 +49,9 @@ class ViewMeal extends StatelessWidget {
                         // Meal Name
                         Text(
                           meal['name'],
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         // Cuisine Tags
                         Wrap( 
                           spacing: 8.0, 
@@ -68,33 +68,33 @@ class ViewMeal extends StatelessWidget {
                                 }).toList(), 
                                 ], 
                                 ), 
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                         // Ingredients
-                        Text(
+                        const Text(
                           'Ingredients',
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         ...meal['ingredients'].map<Widget>((ingredient) {
-                          return Text('• $ingredient', style: TextStyle(fontSize: 16));
+                          return Text('• $ingredient', style: const TextStyle(fontSize: 16));
                         }).toList(),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         // Calories and Meal Type
                         Text(
                           'Calories: ${meal['caloriesPerServing']}',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           'Meal Type: ${meal['mealType']}',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               // Instructions
-              Text(
+              const Text(
                 'Instructions',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -103,31 +103,31 @@ class ViewMeal extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: meal['instructions'].map<Widget>((instruction) {
-                    return Text('• $instruction', style: TextStyle(fontSize: 16));
+                    return Text('• $instruction', style: const TextStyle(fontSize: 16));
                   }).toList(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               // Action Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   ElevatedButton(
                     onPressed: () {
                       // Add meal to the user's plan
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Meal added to your plan!')),
+                        const SnackBar(content: Text('Meal added to your plan!')),
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text('+ Add Meal'),
+                    child: const Text('+ Add Meal'),
                   ),
                 ],
               ),
